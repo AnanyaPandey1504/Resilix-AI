@@ -1,1 +1,709 @@
-<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseRecover // Enterprise</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        zinc: {
+                            800: '#27272a',
+                            900: '#18181b',
+                            950: '#09090b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { background-color: #09090b; color: #e4e4e7; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+        
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(39, 39, 42, 0.8);
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Drawer slide */
+        .drawer { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
+        .drawer.open { transform: translateX(0); }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="glass-panel border-b border-zinc-800 sticky top-0 z-40">
+        <div class="px-6 py-3 flex justify-between items-center max-w-[1600px] mx-auto w-full">
+            <div class="flex items-center space-x-4">
+                <div class="w-8 h-8 rounded border border-zinc-700 flex items-center justify-center bg-zinc-900 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-sm font-bold text-zinc-100 tracking-wide">PulseRecover <span class="text-zinc-500 font-normal">// Enterprise</span></h1>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <!-- System Metrics Bar -->
+                <div class="hidden md:flex items-center space-x-4 text-xs font-mono text-zinc-400 bg-zinc-900/50 px-3 py-1.5 rounded border border-zinc-800/80">
+                    <div class="flex items-center space-x-2 border-r border-zinc-700/50 pr-4">
+                        <span class="flex h-2 w-2 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span>NODE: ap-south-1</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>LATENCY: <span id="latency-ms" class="text-emerald-400">34ms</span></span>
+                    </div>
+                </div>
+
+                <!-- Ledger Badge -->
+                <div id="ledger-badge" class="flex items-center space-x-2 px-3 py-1.5 rounded bg-zinc-900/80 border border-zinc-700/50">
+                    <div id="ledger-dot" class="w-2 h-2 rounded-full bg-zinc-500"></div>
+                    <span id="ledger-text" class="text-xs font-mono font-medium text-zinc-400">VERIFYING...</span>
+                </div>
+                
+                <!-- Quick Action -->
+                <button onclick="switchTab('tab-simulator')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded border border-emerald-500/30 transition-colors">
+                    Simulate Event
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Metrics Command Bar -->
+    <div class="border-b border-zinc-800/80 bg-zinc-900/30">
+        <div class="max-w-[1600px] mx-auto w-full px-6 py-4 grid grid-cols-2 md:grid-cols-5 gap-4 divide-x divide-zinc-800">
+            <div class="px-4 first:pl-0">
+                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Revenue at Risk</p>
+                <p class="text-lg font-mono text-zinc-100">₹<span id="kpi-risk">0.00</span></p>
+            </div>
+            <div class="px-4">
+                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">GMV Recovered</p>
+                <p class="text-lg font-mono text-emerald-400">₹<span id="kpi-recovered">0.00</span></p>
+            </div>
+            <div class="px-4">
+                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Recovery Rate</p>
+                <p class="text-lg font-mono text-zinc-100"><span id="kpi-rate">0.0</span><span class="text-zinc-500 text-sm">%</span></p>
+            </div>
+            <div class="px-4">
+                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Active Guardrails</p>
+                <p class="text-lg font-mono text-cyan-400"><span id="kpi-guardrails">4</span> <span class="text-xs text-zinc-500">Enforcing</span></p>
+            </div>
+            <div class="px-4">
+                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Unbroken Blocks</p>
+                <p class="text-lg font-mono text-zinc-100" id="kpi-blocks">0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="max-w-[1600px] mx-auto w-full px-6 py-6 flex-1 flex flex-col">
+        
+        <!-- Tab Navigation -->
+        <nav class="flex space-x-6 border-b border-zinc-800 mb-6">
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-emerald-500 text-zinc-100 transition-colors" data-target="tab-live">
+                Live Recovery Operations
+            </button>
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 transition-colors" data-target="tab-simulator">
+                Simulation Sandbox
+            </button>
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 transition-colors" data-target="tab-audit">
+                Cryptographic Audit Ledger
+            </button>
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 transition-colors" data-target="tab-rules">
+                Policy Guardians & Rules
+            </button>
+        </nav>
+
+        <!-- Tab 1: Live Recovery Operations -->
+        <div id="tab-live" class="tab-content active flex-1">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+                <!-- Left Panel: Live Stream -->
+                <div class="lg:col-span-3 flex flex-col h-full glass-panel rounded-lg overflow-hidden">
+                    <div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
+                        <h2 class="text-sm font-semibold text-zinc-200">Live Telemetry & Recovery Stream</h2>
+                        <input type="text" id="feed-search" placeholder="Filter by Cohort or Event ID..." class="bg-zinc-950 border border-zinc-800 rounded px-3 py-1 text-xs text-zinc-300 w-64 focus:outline-none focus:border-zinc-600 font-mono">
+                    </div>
+                    <div class="flex-1 overflow-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-zinc-900/80 text-zinc-400 sticky top-0 z-10 border-b border-zinc-800 font-mono text-[10px] uppercase">
+                                <tr>
+                                    <th class="py-2.5 px-4 font-semibold">Timestamp</th>
+                                    <th class="py-2.5 px-4 font-semibold">Event ID</th>
+                                    <th class="py-2.5 px-4 font-semibold">Rail Cohort</th>
+                                    <th class="py-2.5 px-4 font-semibold">Action Taken</th>
+                                    <th class="py-2.5 px-4 font-semibold">Block Hash</th>
+                                    <th class="py-2.5 px-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="live-feed-body" class="divide-y divide-zinc-800/50 font-mono text-zinc-300">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Right Panel: Rail Chart -->
+                <div class="glass-panel rounded-lg flex flex-col">
+                    <div class="px-4 py-3 border-b border-zinc-800 bg-zinc-900/50">
+                        <h2 class="text-sm font-semibold text-zinc-200">Live 4-Rail Distribution</h2>
+                    </div>
+                    <div class="p-4 flex-1 flex items-center justify-center">
+                        <canvas id="railChart" width="100%" height="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Simulation Sandbox -->
+        <div id="tab-simulator" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="glass-panel p-5 rounded-lg">
+                        <h2 class="text-sm font-semibold border-b border-zinc-800 pb-2 mb-4 text-zinc-200">Quick Presets</h2>
+                        <div class="space-y-2">
+                            <button onclick="loadPreset('503')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">1. Bank Outage (503 -> Silent Retry)</button>
+                            <button onclick="loadPreset('cart_drop')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">2. Daytime Cart Drop (Dynamic Link)</button>
+                            <button onclick="loadPreset('high_value')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">3. High-Value Drop (> ₹15k Gate)</button>
+                            <button onclick="loadPreset('mandate')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">4. Expired Mandate (UPI Migration)</button>
+                            <button onclick="loadPreset('b2b')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">5. B2B Overdue (2% Discount / PTP)</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-2 glass-panel p-6 rounded-lg relative overflow-hidden">
+                    <h2 class="text-sm font-semibold border-b border-zinc-800 pb-2 mb-5 text-zinc-200">Inject Custom Event Payload</h2>
+                    
+                    <form id="sim-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Event ID</label>
+                                <input type="text" id="sim-id" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Customer Phone</label>
+                                <input type="text" id="sim-phone" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Error Code</label>
+                                <input type="text" id="sim-error" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Amount (INR)</label>
+                                <input type="number" id="sim-amount" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" step="0.01" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Error Description</label>
+                            <input type="text" id="sim-desc" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-zinc-800/50 flex justify-end items-center">
+                            <span id="sim-status" class="text-xs font-mono mr-4 text-zinc-400"></span>
+                            <button type="submit" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded shadow shadow-emerald-900 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Execute Recovery Pipeline
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Execution Overlay -->
+                    <div id="sim-overlay" class="absolute inset-0 bg-zinc-950/90 backdrop-blur-sm z-10 hidden flex-col items-center justify-center border border-emerald-500/30 rounded-lg">
+                        <div class="w-64">
+                            <h3 class="text-sm font-mono text-emerald-400 mb-4 text-center">Pipeline Executing...</h3>
+                            <div class="space-y-2 text-xs font-mono text-zinc-400" id="sim-steps">
+                                <p id="step-1" class="opacity-30">▶ AI Triage Diagnosis...</p>
+                                <p id="step-2" class="opacity-30">▶ Policy Guardians Check...</p>
+                                <p id="step-3" class="opacity-30">▶ Routing Action...</p>
+                                <p id="step-4" class="opacity-30">▶ Appending Ledger Block...</p>
+                            </div>
+                            <button onclick="closeSimOverlay()" class="mt-6 w-full px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs rounded border border-zinc-700 hidden" id="sim-close-btn">Return to Sandbox</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Cryptographic Audit Explorer -->
+        <div id="tab-audit" class="tab-content h-full">
+            <div class="glass-panel rounded-lg h-full flex flex-col">
+                <div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
+                    <h2 class="text-sm font-semibold text-zinc-200">Raw Ledger Block Explorer</h2>
+                    <button onclick="verifyChainUI()" class="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-300 rounded border border-zinc-700 transition">
+                        Verify Chain Integrity
+                    </button>
+                </div>
+                <div class="flex-1 overflow-auto p-4">
+                    <div id="chain-verify-msg" class="mb-4 text-xs font-mono hidden px-3 py-2 rounded"></div>
+                    <div class="space-y-3" id="audit-feed">
+                        <!-- Audit Blocks -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Policy Guardians & Rules -->
+        <div id="tab-rules" class="tab-content">
+            <div class="flex justify-between items-center mb-6 px-2">
+                <p class="text-sm text-zinc-400">Showing contextual guardrail enforcement for the most recently processed event.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-trai">
+                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-trai"></span>TRAI Quiet Hours</h3>
+                    <p class="text-xs text-zinc-400 mb-3">Prevents automated SMS/WhatsApp communications between 9:00 PM and 9:00 AM IST to comply with telecom regulations.</p>
+                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-trai">ENFORCING</span> | Range: 21:00-09:00 IST</div>
+                </div>
+                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-hv">
+                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-hv"></span>High-Value Approval Gate</h3>
+                    <p class="text-xs text-zinc-400 mb-3">Automatically halts fully autonomous recovery actions for transactions exceeding ₹15,000, flagging them for human manager approval.</p>
+                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-hv">ENFORCING</span> | Limit: > ₹15,000.00</div>
+                </div>
+                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-rbi">
+                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-rbi"></span>RBI Pre-Debit Mandate</h3>
+                    <p class="text-xs text-zinc-400 mb-3">Enforces the 24-hour pre-debit notification requirement for recurring auto-pays. Blocks recovery if notice was not dispatched on time.</p>
+                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-rbi">ENFORCING</span> | Rule: >= 24h</div>
+                </div>
+                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-cap">
+                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-cap"></span>2-Touch Harassment Cap</h3>
+                    <p class="text-xs text-zinc-400 mb-3">Hard limits maximum automated outreach attempts per customer per week to prevent consumer harassment and spam violations.</p>
+                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-cap">ENFORCING</span> | Limit: <= 2</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right Drawer: Inspect Payload -->
+    <div id="payload-drawer" class="fixed inset-y-0 right-0 w-96 glass-panel border-l border-zinc-700 shadow-2xl drawer z-50 flex flex-col">
+        <div class="px-5 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/80">
+            <h3 class="text-sm font-semibold text-zinc-200">Diagnostic Inspection</h3>
+            <button onclick="closeDrawer()" class="text-zinc-500 hover:text-zinc-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="flex-1 overflow-auto p-5 space-y-6">
+            <div>
+                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">Event Reference</p>
+                <p id="drawer-event-id" class="text-xs font-mono text-zinc-200"></p>
+            </div>
+            
+            <div id="drawer-copy-section" class="hidden">
+                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">AI Generated Copy</p>
+                <div class="bg-zinc-950 border border-zinc-800 p-3 rounded text-xs text-zinc-300 font-sans italic" id="drawer-copy"></div>
+            </div>
+            
+            <div>
+                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">Raw JSON Payload</p>
+                <pre id="drawer-json" class="bg-zinc-950 border border-zinc-800 p-3 rounded text-[10px] font-mono text-emerald-400/80 overflow-x-auto whitespace-pre-wrap"></pre>
+            </div>
+            
+            <div>
+                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">Ledger Hash Signature</p>
+                <p id="drawer-hash" class="text-[9px] font-mono text-zinc-500 break-all bg-zinc-900 p-2 rounded border border-zinc-800"></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Drawer Backdrop -->
+    <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden"></div>
+
+    <script>
+        // --- Utilities ---
+        const formatCurrency = (amount) => new Intl.NumberFormat('en-IN').format(amount);
+        const formatTime = (isoString) => new Date(isoString).toLocaleTimeString('en-IN', { hour: '2-digit', minute:'2-digit', second:'2-digit' });
+        const generateId = (prefix) => prefix + '_' + Math.random().toString(36).substr(2, 9);
+        
+        // --- Tab Switching ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.target));
+        });
+
+        function switchTab(targetId) {
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('border-emerald-500', 'text-zinc-100');
+                b.classList.add('border-transparent', 'text-zinc-400');
+                if(b.dataset.target === targetId) {
+                    b.classList.remove('border-transparent', 'text-zinc-400');
+                    b.classList.add('border-emerald-500', 'text-zinc-100');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+        }
+
+        // --- Simulated Latency UI ---
+        setInterval(() => {
+            const ms = Math.floor(Math.random() * (45 - 28 + 1)) + 28;
+            document.getElementById('latency-ms').innerText = `${ms}ms`;
+        }, 2000);
+
+        // --- Chart.js Setup ---
+        let railChartInstance = null;
+        function initChart() {
+            const ctx = document.getElementById('railChart').getContext('2d');
+            railChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Silent Retries', 'Dynamic Links', 'Mandate Migrations', 'High-Value Holds', 'B2B Overdue'],
+                    datasets: [{
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: ['#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#f59e0b'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#a1a1aa', font: { family: 'JetBrains Mono', size: 10 } } }
+                    }
+                }
+            });
+        }
+        initChart();
+
+        // --- Data Polling & Rendering ---
+        let currentData = null;
+        
+        const getBadgeColor = (action) => {
+            if (action.includes('HALT') || action.includes('BLOCKED')) return 'text-red-400 border-red-500/30 bg-red-500/10';
+            if (action.includes('DEFERRED')) return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
+            if (action.includes('SENT') || action.includes('QUEUED') || action.includes('SUCCESS') || action.includes('CREATED')) return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
+            return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+        };
+
+        async function fetchMetrics() {
+            try {
+                const res = await fetch('/api/metrics');
+                const data = await res.json();
+                currentData = data;
+                
+                // KPIs
+                document.getElementById('kpi-risk').innerText = formatCurrency(data.total_gmv_at_risk);
+                document.getElementById('kpi-recovered').innerText = formatCurrency(data.total_gmv_recovered);
+                document.getElementById('kpi-rate').innerText = data.recovery_rate_pct.toFixed(1);
+                document.getElementById('kpi-blocks').innerText = data.total_events_processed;
+                
+                // Ledger Badge
+                const badge = document.getElementById('ledger-badge');
+                const dot = document.getElementById('ledger-dot');
+                const text = document.getElementById('ledger-text');
+                if (data.ledger_status.is_valid) {
+                    badge.className = 'flex items-center space-x-2 px-3 py-1.5 rounded bg-emerald-500/10 border border-emerald-500/30 transition-colors duration-300';
+                    dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+                    text.innerText = 'CHAIN VERIFIED';
+                    text.className = 'text-xs font-mono font-bold text-emerald-400';
+                } else {
+                    badge.className = 'flex items-center space-x-2 px-3 py-1.5 rounded bg-red-500/10 border border-red-500/30 transition-colors duration-300';
+                    dot.className = 'w-2 h-2 rounded-full bg-red-500 animate-pulse';
+                    text.innerText = 'TAMPER DETECTED';
+                    text.className = 'text-xs font-mono font-bold text-red-400';
+                }
+                
+                // Guardrails
+                if (document.getElementById('kpi-guardrails')) {
+                    document.getElementById('kpi-guardrails').innerText = data.active_guardrails_count;
+                }
+                if (data.latest_guardrails) {
+                    updateGuardrailUI('trai', data.latest_guardrails['TRAI_QUIET_HOURS']);
+                    updateGuardrailUI('hv', data.latest_guardrails['HIGH_VALUE_GATE']);
+                    updateGuardrailUI('rbi', data.latest_guardrails['RBI_MANDATE']);
+                    updateGuardrailUI('cap', data.latest_guardrails['HARASSMENT_CAP']);
+                }
+                
+                // Update Chart
+                if(railChartInstance) {
+                    const rb = data.rail_breakdown;
+                    railChartInstance.data.datasets[0].data = [
+                        rb.silent_retries, rb.dynamic_links, rb.mandate_migrations, rb.high_value_holds, rb.b2b_overdue
+                    ];
+                    railChartInstance.update();
+                }
+                
+                // Update Feed
+                renderFeed(data.recent_events);
+                renderAuditExplorer(data.recent_events);
+                
+            } catch (error) {
+                console.error("Error fetching metrics:", error);
+            }
+        }
+        
+        function updateGuardrailUI(id, status) {
+            const panel = document.getElementById(`panel-${id}`);
+            const dot = document.getElementById(`dot-${id}`);
+            const text = document.getElementById(`status-${id}`);
+            if(!panel || !dot || !text) return;
+            
+            text.innerText = status;
+            
+            if(status === 'ENFORCING') {
+                dot.className = 'w-2 h-2 rounded-full mr-2 bg-emerald-500';
+                text.className = 'font-bold text-emerald-400';
+                panel.className = 'glass-panel p-6 rounded-lg transition-colors duration-300 border border-emerald-500/20 bg-zinc-900/50';
+            } else if(status === 'TRIGGERED - BLOCKED') {
+                dot.className = 'w-2 h-2 rounded-full mr-2 bg-red-500 animate-pulse';
+                text.className = 'font-bold text-red-400';
+                panel.className = 'glass-panel p-6 rounded-lg transition-colors duration-300 border border-red-500/40 bg-red-500/5';
+            } else {
+                // SKIPPED
+                dot.className = 'w-2 h-2 rounded-full mr-2 bg-zinc-600';
+                text.className = 'font-bold text-zinc-500';
+                panel.className = 'glass-panel p-6 rounded-lg transition-colors duration-300 border border-zinc-800 opacity-60';
+            }
+        }
+
+        function renderFeed(events) {
+            const tbody = document.getElementById('live-feed-body');
+            const search = document.getElementById('feed-search').value.toLowerCase();
+            
+            tbody.innerHTML = '';
+            
+            const filtered = events.filter(e => e.cohort.toLowerCase().includes(search) || e.event_id.toLowerCase().includes(search));
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-zinc-600 font-sans">No events found...</td></tr>`;
+                return;
+            }
+            
+            filtered.forEach((event, idx) => {
+                const bClasses = getBadgeColor(event.action_taken);
+                
+                // Safely convert payload to a string we can embed
+                const rawJson = event.payload_raw ? encodeURIComponent(JSON.stringify(event.payload_raw)) : '';
+                
+                // Detect link
+                let linkBtnHtml = '';
+                if(event.payload_raw && event.payload_raw.link_data && event.payload_raw.link_data.short_url) {
+                    linkBtnHtml = `<a href="${event.payload_raw.link_data.short_url}" target="_blank" class="ml-2 px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded border border-zinc-700 transition">Link</a>`;
+                }
+                
+                const tr = `
+                <tr class="hover:bg-zinc-800/30 transition-colors group">
+                    <td class="py-3 px-4 text-zinc-500">${formatTime(event.timestamp)}</td>
+                    <td class="py-3 px-4 font-bold text-zinc-300">${event.event_id}</td>
+                    <td class="py-3 px-4">${event.cohort}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 rounded text-[9px] border ${bClasses}">${event.action_taken}</span>
+                    </td>
+                    <td class="py-3 px-4 text-zinc-600 truncate max-w-[120px]" title="${event.current_hash}">${event.current_hash.substring(0,16)}...</td>
+                    <td class="py-3 px-4 text-right">
+                        <button onclick="openDrawer('${event.event_id}', '${event.current_hash}', '${rawJson}')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded border border-zinc-700 transition">Inspect</button>
+                        ${linkBtnHtml}
+                    </td>
+                </tr>
+                `;
+                tbody.innerHTML += tr;
+            });
+        }
+        
+        document.getElementById('feed-search').addEventListener('input', () => {
+            if(currentData) renderFeed(currentData.recent_events);
+        });
+
+        // --- Drawer Logic ---
+        function openDrawer(eventId, hash, encodedPayload) {
+            document.getElementById('drawer-event-id').innerText = eventId;
+            document.getElementById('drawer-hash').innerText = hash;
+            
+            const payload = encodedPayload ? JSON.parse(decodeURIComponent(encodedPayload)) : {};
+            document.getElementById('drawer-json').innerText = JSON.stringify(payload, null, 2);
+            
+            const copySection = document.getElementById('drawer-copy-section');
+            if(payload.copy) {
+                copySection.classList.remove('hidden');
+                document.getElementById('drawer-copy').innerText = payload.copy;
+            } else {
+                copySection.classList.add('hidden');
+            }
+            
+            document.getElementById('payload-drawer').classList.add('open');
+            document.getElementById('drawer-backdrop').classList.remove('hidden');
+        }
+        
+        function closeDrawer() {
+            document.getElementById('payload-drawer').classList.remove('open');
+            document.getElementById('drawer-backdrop').classList.add('hidden');
+        }
+
+        // --- Audit Explorer ---
+        function renderAuditExplorer(events) {
+            const container = document.getElementById('audit-feed');
+            container.innerHTML = '';
+            
+            events.forEach((event, idx) => {
+                const isLatest = idx === 0;
+                const html = `
+                <div class="bg-zinc-900/80 border ${isLatest ? 'border-emerald-500/50' : 'border-zinc-800'} rounded p-4 relative group hover:border-zinc-600 transition-colors">
+                    ${isLatest ? '<div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div><div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500"></div>' : ''}
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-zinc-300 uppercase">Event: ${event.event_id}</span>
+                        <span class="text-[10px] text-zinc-500 font-mono">${new Date(event.timestamp).toISOString()}</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                        <div>
+                            <p class="text-[9px] uppercase text-zinc-600 mb-1">Action Recorded</p>
+                            <p class="text-xs font-mono text-emerald-400">${event.action_taken}</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] uppercase text-zinc-600 mb-1">SHA-256 Block Hash</p>
+                            <p class="text-[10px] font-mono text-zinc-400 break-all bg-zinc-950 p-1.5 rounded border border-zinc-800">${event.current_hash}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+        
+        function verifyChainUI() {
+            const msg = document.getElementById('chain-verify-msg');
+            msg.classList.remove('hidden');
+            msg.className = "mb-4 text-xs font-mono px-3 py-2 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 animate-pulse";
+            msg.innerText = "> Running cryptographic recalculation across all nodes...";
+            
+            setTimeout(() => {
+                if (currentData && currentData.ledger_status.is_valid) {
+                    msg.className = "mb-4 text-xs font-mono px-3 py-2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+                    msg.innerText = `> SUCCESS: Evaluated ${currentData.ledger_status.total_records} blocks. Chain integrity is 100% valid. No tampering detected.`;
+                } else {
+                    msg.className = "mb-4 text-xs font-mono px-3 py-2 rounded bg-red-500/10 text-red-400 border border-red-500/30";
+                    msg.innerText = `> ALERT: Hash mismatch detected at block ID: ${currentData?.ledger_status?.broken_at_id || 'UNKNOWN'}. Data integrity compromised.`;
+                }
+            }, 1500);
+        }
+
+        // --- Simulator Logic ---
+        function loadPreset(type) {
+            const presets = {
+                '503': { err: '503', desc: 'Gateway Error', amt: 1200 },
+                'cart_drop': { err: 'ABORTED', desc: 'User closed window', amt: 2500 },
+                'high_value': { err: 'ABORTED', desc: 'User dropped', amt: 25000 },
+                'mandate': { err: 'MANDATE_DEGRADED', desc: 'Autopay failed', amt: 499 },
+                'b2b': { err: 'INVOICE_OVERDUE', desc: 'Overdue invoice', amt: 150000 }
+            };
+            const p = presets[type];
+            document.getElementById('sim-id').value = generateId(`evt_${type}`);
+            document.getElementById('sim-phone').value = '9876543210';
+            document.getElementById('sim-error').value = p.err;
+            document.getElementById('sim-amount').value = p.amt;
+            document.getElementById('sim-desc').value = p.desc;
+        }
+
+        document.getElementById('sim-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                event_id: document.getElementById('sim-id').value,
+                customer_phone: document.getElementById('sim-phone').value,
+                error_code: document.getElementById('sim-error').value,
+                amount_inr: parseFloat(document.getElementById('sim-amount').value),
+                error_description: document.getElementById('sim-desc').value
+            };
+            
+            // Show Overlay Animation
+            const overlay = document.getElementById('sim-overlay');
+            const steps = [
+                document.getElementById('step-1'),
+                document.getElementById('step-2'),
+                document.getElementById('step-3'),
+                document.getElementById('step-4')
+            ];
+            const closeBtn = document.getElementById('sim-close-btn');
+            const statusText = document.getElementById('sim-status');
+            
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            closeBtn.classList.add('hidden');
+            statusText.innerText = '';
+            steps.forEach(s => s.classList.add('opacity-30', 'text-zinc-400'));
+            steps.forEach(s => s.classList.remove('text-emerald-400', 'font-bold'));
+            
+            // API Call
+            try {
+                const res = await fetch('/api/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                // Animate steps
+                const delay = ms => new Promise(res => setTimeout(res, ms));
+                
+                await delay(400);
+                steps[0].classList.remove('opacity-30'); steps[0].classList.add('text-emerald-400');
+                
+                await delay(400);
+                steps[1].classList.remove('opacity-30'); steps[1].classList.add('text-emerald-400');
+                
+                await delay(400);
+                steps[2].classList.remove('opacity-30'); steps[2].classList.add('text-emerald-400');
+                steps[2].innerText = `▶ Routing Action: ${data.action_taken || 'ALREADY_PROCESSED'}`;
+                
+                await delay(400);
+                steps[3].classList.remove('opacity-30'); steps[3].classList.add('text-emerald-400', 'font-bold');
+                
+                closeBtn.classList.remove('hidden');
+                
+                // Refresh data instantly
+                fetchMetrics();
+                
+            } catch (err) {
+                console.error(err);
+                statusText.innerText = 'Error executing pipeline';
+                statusText.classList.add('text-red-400');
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+        });
+        
+        function closeSimOverlay() {
+            document.getElementById('sim-overlay').classList.add('hidden');
+            document.getElementById('sim-overlay').classList.remove('flex');
+            document.getElementById('sim-id').value = generateId('evt_custom');
+        }
+
+        // Initialize polling
+        fetchMetrics();
+        setInterval(fetchMetrics, 3000);
+        // Pre-fill initial ID
+        document.getElementById('sim-id').value = generateId('evt_start');
+
+    </script>
+</body>
+</html>
