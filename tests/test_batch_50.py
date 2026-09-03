@@ -91,4 +91,4 @@ def test_high_volume_50_scenario_benchmark(mock_b2b_link, mock_sub_link, mock_b_
     ledger_status = verify_ledger()
     assert ledger_status["is_valid"] is True
     assert ledger_status["total_records"] == 50
-    assert ledger_status["broken_at_id"] is None
+    assert ledger_status["broken_at_event_id"] is None

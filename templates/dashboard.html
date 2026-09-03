@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PulseRecover // Enterprise</title>
+    <title>Resilix AI // Enterprise Revenue Resilience</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,13 +19,6 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        zinc: {
-                            800: '#27272a',
-                            900: '#18181b',
-                            950: '#09090b',
-                        }
                     }
                 }
             }
@@ -36,22 +29,29 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body { background-color: #09090b; color: #e4e4e7; }
+        body { 
+            background-color: #050505; 
+            color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.12) 0px, transparent 45%),
+                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 45%);
+            background-attachment: fixed;
+        }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #09090b; }
-        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #1e1e24; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2d2d36; }
         
         .glass-panel {
-            background: rgba(24, 24, 27, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(39, 39, 42, 0.8);
+            background: #0e0e10;
+            border: 1px solid #1e1e24;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
         }
         
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Drawer slide */
         .drawer { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
@@ -60,41 +60,48 @@
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Header -->
-    <header class="glass-panel border-b border-zinc-800 sticky top-0 z-40">
-        <div class="px-6 py-3 flex justify-between items-center max-w-[1600px] mx-auto w-full">
-            <div class="flex items-center space-x-4">
-                <div class="w-8 h-8 rounded border border-zinc-700 flex items-center justify-center bg-zinc-900 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+    <!-- Header (Significantly Broader Upper Band with Command Branding) -->
+    <header class="bg-[#0e0e10]/95 border-b border-[#1e1e24] sticky top-0 z-40 backdrop-blur-md shadow-xl shadow-teal-950/20">
+        <div class="px-10 py-7 flex justify-between items-center max-w-[1600px] mx-auto w-full">
+            <div class="flex items-center space-x-5">
+                <!-- Expanded, Ultra-Premium Logo Badge -->
+                <div class="w-16 h-16 rounded-2xl border-2 border-teal-500/40 p-1.5 bg-[#050505] shadow-[0_0_25px_rgba(20,184,166,0.3)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:border-teal-400">
+                    <img src="/static/resilix_logo.png" alt="Resilix AI Logo" class="w-full h-full object-cover rounded-xl">
                 </div>
-                <div>
-                    <h1 class="text-sm font-bold text-zinc-100 tracking-wide">PulseRecover <span class="text-zinc-500 font-normal">// Enterprise</span></h1>
+                <!-- Prominent Brand Title with Subtitle Stacked Below -->
+                <div class="flex flex-col">
+                    <h1 class="text-2xl font-black text-white tracking-wide flex items-center">
+                        Resilix <span class="ml-2 bg-gradient-to-r from-teal-400 via-emerald-400 to-indigo-400 bg-clip-text text-transparent">AI</span>
+                    </h1>
+                    <span class="text-xs font-mono font-bold tracking-[0.2em] text-teal-400 uppercase mt-1">
+                        Autonomous Revenue Engine
+                    </span>
                 </div>
             </div>
             
             <div class="flex items-center space-x-6">
                 <!-- System Metrics Bar -->
-                <div class="hidden md:flex items-center space-x-4 text-xs font-mono text-zinc-400 bg-zinc-900/50 px-3 py-1.5 rounded border border-zinc-800/80">
-                    <div class="flex items-center space-x-2 border-r border-zinc-700/50 pr-4">
-                        <span class="flex h-2 w-2 relative">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <div class="hidden lg:flex items-center space-x-4 text-xs font-mono text-slate-300 bg-[#050505] px-4 py-2.5 rounded-xl border border-[#1e1e24] shadow-inner">
+                    <div class="flex items-center space-x-2 border-r border-[#1e1e24] pr-4">
+                        <span class="flex h-2.5 w-2.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-400"></span>
                         </span>
-                        <span>NODE: ap-south-1</span>
+                        <span class="font-semibold">NODE: ap-south-1</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <span>LATENCY: <span id="latency-ms" class="text-emerald-400">34ms</span></span>
+                        <span>LATENCY: <span id="latency-ms" class="text-teal-400 font-bold">34ms</span></span>
                     </div>
                 </div>
 
-                <!-- Ledger Badge -->
-                <div id="ledger-badge" class="flex items-center space-x-2 px-3 py-1.5 rounded bg-zinc-900/80 border border-zinc-700/50">
-                    <div id="ledger-dot" class="w-2 h-2 rounded-full bg-zinc-500"></div>
-                    <span id="ledger-text" class="text-xs font-mono font-medium text-zinc-400">VERIFYING...</span>
+                <!-- Ledger Badge (Mint Green Pulse) -->
+                <div id="ledger-badge" class="flex items-center space-x-2.5 px-4 py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/30 shadow-[0_0_15px_rgba(20,184,166,0.25)]">
+                    <div id="ledger-dot" class="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse"></div>
+                    <span id="ledger-text" class="text-xs font-mono font-bold text-teal-300">VERIFYING...</span>
                 </div>
                 
-                <!-- Quick Action -->
-                <button onclick="switchTab('tab-simulator')" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded border border-emerald-500/30 transition-colors">
+                <!-- Quick Action Button -->
+                <button onclick="switchTab('tab-simulator')" class="px-5 py-2.5 bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 text-white text-xs font-mono font-bold rounded-xl shadow-lg shadow-teal-950/50 border border-teal-400/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
                     Simulate Event
                 </button>
             </div>
@@ -102,85 +109,97 @@
     </header>
 
     <!-- Metrics Command Bar -->
-    <div class="border-b border-zinc-800/80 bg-zinc-900/30">
-        <div class="max-w-[1600px] mx-auto w-full px-6 py-4 grid grid-cols-2 md:grid-cols-5 gap-4 divide-x divide-zinc-800">
+    <div class="border-b border-[#1e1e24] bg-[#050505]/80 backdrop-blur-sm">
+        <div class="max-w-[1600px] mx-auto w-full px-8 py-4 grid grid-cols-2 md:grid-cols-5 gap-4 divide-x divide-[#1e1e24]">
             <div class="px-4 first:pl-0">
-                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Revenue at Risk</p>
-                <p class="text-lg font-mono text-zinc-100">₹<span id="kpi-risk">0.00</span></p>
+                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Revenue at Risk</p>
+                <p class="text-xl font-mono font-bold text-white">₹<span id="kpi-risk">0.00</span></p>
             </div>
             <div class="px-4">
-                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">GMV Recovered</p>
-                <p class="text-lg font-mono text-emerald-400">₹<span id="kpi-recovered">0.00</span></p>
+                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">GMV Recovered</p>
+                <p class="text-xl font-mono font-bold text-teal-400">₹<span id="kpi-recovered">0.00</span></p>
             </div>
             <div class="px-4">
-                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Recovery Rate</p>
-                <p class="text-lg font-mono text-zinc-100"><span id="kpi-rate">0.0</span><span class="text-zinc-500 text-sm">%</span></p>
+                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Recovery Rate</p>
+                <p class="text-xl font-mono font-bold text-white"><span id="kpi-rate">0.0</span><span class="text-teal-400 text-sm">%</span></p>
             </div>
             <div class="px-4">
-                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Active Guardrails</p>
-                <p class="text-lg font-mono text-cyan-400"><span id="kpi-guardrails">4</span> <span class="text-xs text-zinc-500">Enforcing</span></p>
+                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Active Guardrails</p>
+                <p class="text-xl font-mono font-bold text-teal-400"><span id="kpi-guardrails">4</span> <span class="text-xs text-slate-400 font-normal">Enforcing</span></p>
             </div>
             <div class="px-4">
-                <p class="text-[10px] uppercase font-semibold text-zinc-500 tracking-wider mb-1">Unbroken Blocks</p>
-                <p class="text-lg font-mono text-zinc-100" id="kpi-blocks">0</p>
+                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Unbroken Blocks</p>
+                <p class="text-xl font-mono font-bold text-white" id="kpi-blocks">0</p>
             </div>
         </div>
     </div>
 
     <!-- Main Workspace -->
-    <div class="max-w-[1600px] mx-auto w-full px-6 py-6 flex-1 flex flex-col">
+    <div class="max-w-[1600px] mx-auto w-full px-8 py-6 flex-1 flex flex-col">
         
-        <!-- Tab Navigation -->
-        <nav class="flex space-x-6 border-b border-zinc-800 mb-6">
-            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-emerald-500 text-zinc-100 transition-colors" data-target="tab-live">
+        <!-- Tab Navigation (Indigo Quartz & Mint Accents) -->
+        <nav class="flex space-x-6 border-b border-[#1e1e24] mb-6">
+            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-teal-400 text-teal-300 transition-colors shadow-[0_4px_12px_-2px_rgba(20,184,166,0.3)]" data-target="tab-live">
                 Live Recovery Operations
             </button>
-            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 transition-colors" data-target="tab-simulator">
+            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-colors" data-target="tab-simulator">
                 Simulation Sandbox
             </button>
-            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 transition-colors" data-target="tab-audit">
+            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-colors" data-target="tab-audit">
                 Cryptographic Audit Ledger
             </button>
-            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 transition-colors" data-target="tab-rules">
+            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-colors" data-target="tab-rules">
                 Policy Guardians & Rules
             </button>
-        </nav>
-
-        <!-- Tab 1: Live Recovery Operations -->
+        </nav>            <!-- Tab 1: Live Recovery Operations -->
         <div id="tab-live" class="tab-content active flex-1">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
                 <!-- Left Panel: Live Stream -->
-                <div class="lg:col-span-3 flex flex-col h-full glass-panel rounded-lg overflow-hidden">
-                    <div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
-                        <h2 class="text-sm font-semibold text-zinc-200">Live Telemetry & Recovery Stream</h2>
-                        <input type="text" id="feed-search" placeholder="Filter by Cohort or Event ID..." class="bg-zinc-950 border border-zinc-800 rounded px-3 py-1 text-xs text-zinc-300 w-64 focus:outline-none focus:border-zinc-600 font-mono">
+                <div class="lg:col-span-3 flex flex-col h-full bg-[#0e0e10] rounded-xl overflow-hidden border border-[#1e1e24] shadow-lg shadow-teal-950/10">
+                    <div class="px-5 py-3.5 border-b border-[#1e1e24] flex justify-between items-center bg-[#050505]/80 backdrop-blur-sm">
+                        <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> Live Telemetry & Recovery Stream
+                        </h2>
+                        <input type="text" id="feed-search" placeholder="Filter by Cohort or Event ID..." class="bg-[#050505] border border-[#1e1e24] rounded-lg px-3 py-1.5 text-xs text-white w-64 focus:outline-none focus:border-teal-500/60 font-mono">
                     </div>
                     <div class="flex-1 overflow-auto">
                         <table class="w-full text-left border-collapse text-xs">
-                            <thead class="bg-zinc-900/80 text-zinc-400 sticky top-0 z-10 border-b border-zinc-800 font-mono text-[10px] uppercase">
+                            <thead class="bg-[#050505]/90 text-slate-400 sticky top-0 z-10 border-b border-[#1e1e24] font-mono text-[10px] uppercase">
                                 <tr>
-                                    <th class="py-2.5 px-4 font-semibold">Timestamp</th>
-                                    <th class="py-2.5 px-4 font-semibold">Event ID</th>
-                                    <th class="py-2.5 px-4 font-semibold">Rail Cohort</th>
-                                    <th class="py-2.5 px-4 font-semibold">Action Taken</th>
-                                    <th class="py-2.5 px-4 font-semibold">Block Hash</th>
-                                    <th class="py-2.5 px-4 font-semibold text-right">Actions</th>
+                                    <th class="py-3 px-4 font-bold">Timestamp</th>
+                                    <th class="py-3 px-4 font-bold">Event ID</th>
+                                    <th class="py-3 px-4 font-bold">Rail Cohort</th>
+                                    <th class="py-3 px-4 font-bold">Action Taken</th>
+                                    <th class="py-3 px-4 font-bold">Block Hash</th>
+                                    <th class="py-3 px-4 font-bold text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="live-feed-body" class="divide-y divide-zinc-800/50 font-mono text-zinc-300">
+                            <tbody id="live-feed-body" class="divide-y divide-[#1e1e24]/60 font-mono text-slate-300">
                                 <!-- Dynamic rows -->
                             </tbody>
                         </table>
                     </div>
                 </div>
                 
-                <!-- Right Panel: Rail Chart -->
-                <div class="glass-panel rounded-lg flex flex-col">
-                    <div class="px-4 py-3 border-b border-zinc-800 bg-zinc-900/50">
-                        <h2 class="text-sm font-semibold text-zinc-200">Live 4-Rail Distribution</h2>
+                <!-- Right Panel: Rail Chart with Scope Toggle & Center Action Overlay -->
+                <div class="bg-[#0e0e10] rounded-xl flex flex-col border border-[#1e1e24] shadow-lg shadow-teal-950/10">
+                    <div class="px-5 py-3 border-b border-[#1e1e24] bg-[#050505]/80 flex justify-between items-center">
+                        <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-white">GMV Rupee Volume (₹ Share)</h2>
+                        <div class="flex items-center space-x-1 bg-[#09090b] p-1 rounded-lg border border-[#1e1e24] text-[10px] font-mono">
+                            <button id="scope-live-btn" onclick="setChartScope('live')" class="px-2.5 py-0.5 rounded-md font-bold transition-all bg-teal-500/20 text-teal-300 border border-teal-500/40">Live Session</button>
+                            <button id="scope-all-btn" onclick="setChartScope('all_time')" class="px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white transition-all border border-transparent">All-Time</button>
+                        </div>
                     </div>
-                    <div class="p-4 flex-1 flex items-center justify-center">
+                    <div class="p-4 flex-1 flex items-center justify-center relative min-h-[260px]">
                         <canvas id="railChart" width="100%" height="100%"></canvas>
+                        
+                        <!-- Center Donut Action Overlay Container -->
+                        <div id="chart-center-overlay" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
+                            <span id="center-badge" class="px-2.5 py-1 rounded-md text-[9px] font-mono font-bold uppercase transition-all duration-300 bg-[#050505]/80 text-teal-300 border border-teal-500/40">
+                                <span id="center-text">80.2%</span>
+                            </span>
+                            <span id="center-subtext" class="text-[9px] font-mono text-slate-400 mt-1 font-bold tracking-wider">RECOVERY HEALTH</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -190,50 +209,50 @@
         <div id="tab-simulator" class="tab-content">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-1 space-y-4">
-                    <div class="glass-panel p-5 rounded-lg">
-                        <h2 class="text-sm font-semibold border-b border-zinc-800 pb-2 mb-4 text-zinc-200">Quick Presets</h2>
+                    <div class="bg-[#0e0e10] p-5 rounded-xl border border-[#1e1e24] shadow-lg shadow-teal-950/10">
+                        <h2 class="text-xs font-mono font-bold uppercase tracking-wider border-b border-[#1e1e24] pb-2.5 mb-4 text-white">Quick Presets</h2>
                         <div class="space-y-2">
-                            <button onclick="loadPreset('503')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">1. Bank Outage (503 -> Silent Retry)</button>
-                            <button onclick="loadPreset('cart_drop')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">2. Daytime Cart Drop (Dynamic Link)</button>
-                            <button onclick="loadPreset('high_value')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">3. High-Value Drop (> ₹15k Gate)</button>
-                            <button onclick="loadPreset('mandate')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">4. Expired Mandate (UPI Migration)</button>
-                            <button onclick="loadPreset('b2b')" class="w-full text-left px-3 py-2 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded transition font-mono">5. B2B Overdue (2% Discount / PTP)</button>
+                            <button onclick="loadPreset('503')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">1. Bank Outage (503 -> Silent Retry)</button>
+                            <button onclick="loadPreset('cart_drop')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">2. Daytime Cart Drop (Dynamic Link)</button>
+                            <button onclick="loadPreset('high_value')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">3. High-Value Drop (> ₹15k Gate)</button>
+                            <button onclick="loadPreset('mandate')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">4. Expired Mandate (UPI Migration)</button>
+                            <button onclick="loadPreset('b2b')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">5. B2B Overdue (2% Discount / PTP)</button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="lg:col-span-2 glass-panel p-6 rounded-lg relative overflow-hidden">
-                    <h2 class="text-sm font-semibold border-b border-zinc-800 pb-2 mb-5 text-zinc-200">Inject Custom Event Payload</h2>
+                <div class="lg:col-span-2 bg-[#0e0e10] p-6 rounded-xl relative overflow-hidden border border-[#1e1e24] shadow-lg shadow-teal-950/10">
+                    <h2 class="text-xs font-mono font-bold uppercase tracking-wider border-b border-[#1e1e24] pb-2.5 mb-5 text-white">Inject Custom Event Payload</h2>
                     
                     <form id="sim-form" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Event ID</label>
-                                <input type="text" id="sim-id" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Event ID</label>
+                                <input type="text" id="sim-id" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
                             </div>
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Customer Phone</label>
-                                <input type="text" id="sim-phone" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Customer Phone</label>
+                                <input type="text" id="sim-phone" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Error Code</label>
-                                <input type="text" id="sim-error" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Error Code</label>
+                                <input type="text" id="sim-error" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
                             </div>
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Amount (INR)</label>
-                                <input type="number" id="sim-amount" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" step="0.01" required>
+                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Amount (INR)</label>
+                                <input type="number" id="sim-amount" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" step="0.01" required>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[10px] uppercase font-mono text-zinc-500 mb-1">Error Description</label>
-                            <input type="text" id="sim-desc" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-emerald-500/50" required>
+                            <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Error Description</label>
+                            <input type="text" id="sim-desc" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
                         </div>
                         
-                        <div class="pt-4 border-t border-zinc-800/50 flex justify-end items-center">
-                            <span id="sim-status" class="text-xs font-mono mr-4 text-zinc-400"></span>
-                            <button type="submit" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded shadow shadow-emerald-900 transition-colors flex items-center">
+                        <div class="pt-4 border-t border-[#1e1e24] flex justify-end items-center">
+                            <span id="sim-status" class="text-xs font-mono mr-4 text-slate-400"></span>
+                            <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 text-white text-xs font-mono font-bold rounded-lg shadow-lg shadow-teal-950/40 border border-teal-400/30 transition-all flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                 Execute Recovery Pipeline
                             </button>
@@ -241,16 +260,16 @@
                     </form>
                     
                     <!-- Execution Overlay -->
-                    <div id="sim-overlay" class="absolute inset-0 bg-zinc-950/90 backdrop-blur-sm z-10 hidden flex-col items-center justify-center border border-emerald-500/30 rounded-lg">
+                    <div id="sim-overlay" class="absolute inset-0 bg-[#050505]/95 backdrop-blur-md z-10 hidden flex-col items-center justify-center border border-teal-500/40 rounded-xl">
                         <div class="w-64">
-                            <h3 class="text-sm font-mono text-emerald-400 mb-4 text-center">Pipeline Executing...</h3>
-                            <div class="space-y-2 text-xs font-mono text-zinc-400" id="sim-steps">
+                            <h3 class="text-xs font-mono uppercase font-bold text-teal-400 mb-4 text-center">Pipeline Executing...</h3>
+                            <div class="space-y-2 text-xs font-mono text-slate-400" id="sim-steps">
                                 <p id="step-1" class="opacity-30">▶ AI Triage Diagnosis...</p>
                                 <p id="step-2" class="opacity-30">▶ Policy Guardians Check...</p>
                                 <p id="step-3" class="opacity-30">▶ Routing Action...</p>
                                 <p id="step-4" class="opacity-30">▶ Appending Ledger Block...</p>
                             </div>
-                            <button onclick="closeSimOverlay()" class="mt-6 w-full px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs rounded border border-zinc-700 hidden" id="sim-close-btn">Return to Sandbox</button>
+                            <button onclick="closeSimOverlay()" class="mt-6 w-full px-4 py-2 bg-[#0e0e10] hover:bg-teal-950/30 text-white text-xs font-mono rounded-lg border border-[#1e1e24] hidden" id="sim-close-btn">Return to Sandbox</button>
                         </div>
                     </div>
                 </div>
@@ -259,15 +278,23 @@
 
         <!-- Tab 3: Cryptographic Audit Explorer -->
         <div id="tab-audit" class="tab-content h-full">
-            <div class="glass-panel rounded-lg h-full flex flex-col">
-                <div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
-                    <h2 class="text-sm font-semibold text-zinc-200">Raw Ledger Block Explorer</h2>
-                    <button onclick="verifyChainUI()" class="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-300 rounded border border-zinc-700 transition">
-                        Verify Chain Integrity
-                    </button>
+            <div class="bg-[#0e0e10] rounded-xl h-full flex flex-col border border-[#1e1e24] shadow-lg shadow-teal-950/10">
+                <div class="px-5 py-3.5 border-b border-[#1e1e24] flex justify-between items-center bg-[#050505]/80">
+                    <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-white">Raw Ledger Block Explorer</h2>
+                    <div class="flex space-x-3">
+                        <button onclick="simulateHack()" class="px-3.5 py-1.5 bg-rose-950/60 hover:bg-rose-900/80 text-xs font-mono text-rose-400 rounded-lg border border-rose-800/60 transition shadow-sm">
+                            <span class="mr-1">⚠️</span> Simulate Hack
+                        </button>
+                        <button onclick="rollbackChain()" id="btn-rollback" class="px-3.5 py-1.5 bg-amber-950/60 hover:bg-amber-900/80 text-xs font-mono text-amber-300 rounded-lg border border-amber-800/60 transition hidden shadow-sm">
+                            <span class="mr-1">🛡️</span> Execute Safe Rollback
+                        </button>
+                        <button onclick="verifyChainUI()" class="px-3.5 py-1.5 bg-[#050505] hover:bg-teal-950/30 text-xs font-mono text-teal-200 rounded-lg border border-[#1e1e24] transition">
+                            Verify Chain Integrity
+                        </button>
+                    </div>
                 </div>
-                <div class="flex-1 overflow-auto p-4">
-                    <div id="chain-verify-msg" class="mb-4 text-xs font-mono hidden px-3 py-2 rounded"></div>
+                <div class="flex-1 overflow-auto p-5">
+                    <div id="chain-verify-msg" class="mb-4 text-xs font-mono hidden px-4 py-2.5 rounded-lg"></div>
                     <div class="space-y-3" id="audit-feed">
                         <!-- Audit Blocks -->
                     </div>
@@ -278,28 +305,28 @@
         <!-- Tab 4: Policy Guardians & Rules -->
         <div id="tab-rules" class="tab-content">
             <div class="flex justify-between items-center mb-6 px-2">
-                <p class="text-sm text-zinc-400">Showing contextual guardrail enforcement for the most recently processed event.</p>
+                <p class="text-xs font-mono text-slate-400">Showing contextual guardrail enforcement for the most recently processed event.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-trai">
-                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-trai"></span>TRAI Quiet Hours</h3>
-                    <p class="text-xs text-zinc-400 mb-3">Prevents automated SMS/WhatsApp communications between 9:00 PM and 9:00 AM IST to comply with telecom regulations.</p>
-                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-trai">ENFORCING</span> | Range: 21:00-09:00 IST</div>
+                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-trai">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-trai"></span>TRAI Quiet Hours</h3>
+                    <p class="text-xs text-slate-400 mb-3">Prevents automated SMS/WhatsApp communications between 9:00 PM and 9:00 AM IST to comply with telecom regulations.</p>
+                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-trai">ENFORCING</span> | Range: 21:00-09:00 IST</div>
                 </div>
-                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-hv">
-                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-hv"></span>High-Value Approval Gate</h3>
-                    <p class="text-xs text-zinc-400 mb-3">Automatically halts fully autonomous recovery actions for transactions exceeding ₹15,000, flagging them for human manager approval.</p>
-                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-hv">ENFORCING</span> | Limit: > ₹15,000.00</div>
+                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-hv">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-hv"></span>High-Value Approval Gate</h3>
+                    <p class="text-xs text-slate-400 mb-3">Automatically halts fully autonomous recovery actions for transactions exceeding ₹15,000, flagging them for human manager approval.</p>
+                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-hv">ENFORCING</span> | Limit: > ₹15,000.00</div>
                 </div>
-                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-rbi">
-                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-rbi"></span>RBI Pre-Debit Mandate</h3>
-                    <p class="text-xs text-zinc-400 mb-3">Enforces the 24-hour pre-debit notification requirement for recurring auto-pays. Blocks recovery if notice was not dispatched on time.</p>
-                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-rbi">ENFORCING</span> | Rule: >= 24h</div>
+                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-rbi">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-rbi"></span>RBI Pre-Debit Mandate</h3>
+                    <p class="text-xs text-slate-400 mb-3">Enforces the 24-hour pre-debit notification requirement for recurring auto-pays. Blocks recovery if notice was not dispatched on time.</p>
+                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-rbi">ENFORCING</span> | Rule: >= 24h</div>
                 </div>
-                <div class="glass-panel p-6 rounded-lg transition-colors duration-300" id="panel-cap">
-                    <h3 class="text-sm font-semibold text-zinc-200 mb-4 flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2" id="dot-cap"></span>2-Touch Harassment Cap</h3>
-                    <p class="text-xs text-zinc-400 mb-3">Hard limits maximum automated outreach attempts per customer per week to prevent consumer harassment and spam violations.</p>
-                    <div class="text-[10px] font-mono bg-zinc-950 p-2 rounded border border-zinc-800 text-zinc-500">Status: <span class="text-emerald-400 font-bold" id="status-cap">ENFORCING</span> | Limit: <= 2</div>
+                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-cap">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-cap"></span>2-Touch Harassment Cap</h3>
+                    <p class="text-xs text-slate-400 mb-3">Hard limits maximum automated outreach attempts per customer per week to prevent consumer harassment and spam violations.</p>
+                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-cap">ENFORCING</span> | Limit: <= 2</div>
                 </div>
             </div>
         </div>
@@ -307,32 +334,32 @@
     </div>
 
     <!-- Right Drawer: Inspect Payload -->
-    <div id="payload-drawer" class="fixed inset-y-0 right-0 w-96 glass-panel border-l border-zinc-700 shadow-2xl drawer z-50 flex flex-col">
-        <div class="px-5 py-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/80">
-            <h3 class="text-sm font-semibold text-zinc-200">Diagnostic Inspection</h3>
-            <button onclick="closeDrawer()" class="text-zinc-500 hover:text-zinc-300">
+    <div id="payload-drawer" class="fixed inset-y-0 right-0 w-96 bg-[#0e0e10] border-l border-[#1e1e24] shadow-2xl drawer z-50 flex flex-col">
+        <div class="px-5 py-4 border-b border-[#1e1e24] flex justify-between items-center bg-[#050505]">
+            <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white">Diagnostic Inspection</h3>
+            <button onclick="closeDrawer()" class="text-slate-400 hover:text-white">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
         <div class="flex-1 overflow-auto p-5 space-y-6">
             <div>
-                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">Event Reference</p>
-                <p id="drawer-event-id" class="text-xs font-mono text-zinc-200"></p>
+                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">Event Reference</p>
+                <p id="drawer-event-id" class="text-xs font-mono text-white font-bold"></p>
             </div>
             
             <div id="drawer-copy-section" class="hidden">
-                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">AI Generated Copy</p>
-                <div class="bg-zinc-950 border border-zinc-800 p-3 rounded text-xs text-zinc-300 font-sans italic" id="drawer-copy"></div>
+                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">AI Generated Copy</p>
+                <div class="bg-[#050505] border border-[#1e1e24] p-3 rounded-lg text-xs text-slate-300 font-sans italic" id="drawer-copy"></div>
             </div>
             
             <div>
-                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">Raw JSON Payload</p>
-                <pre id="drawer-json" class="bg-zinc-950 border border-zinc-800 p-3 rounded text-[10px] font-mono text-emerald-400/80 overflow-x-auto whitespace-pre-wrap"></pre>
+                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">Raw JSON Payload</p>
+                <pre id="drawer-json" class="bg-[#050505] border border-[#1e1e24] p-3 rounded-lg text-[10px] font-mono text-teal-300 overflow-x-auto whitespace-pre-wrap"></pre>
             </div>
             
             <div>
-                <p class="text-[10px] uppercase font-mono text-zinc-500 mb-1">Ledger Hash Signature</p>
-                <p id="drawer-hash" class="text-[9px] font-mono text-zinc-500 break-all bg-zinc-900 p-2 rounded border border-zinc-800"></p>
+                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">Ledger Hash Signature</p>
+                <p id="drawer-hash" class="text-[9px] font-mono text-slate-400 break-all bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24]"></p>
             </div>
         </div>
     </div>
@@ -353,11 +380,11 @@
 
         function switchTab(targetId) {
             document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('border-emerald-500', 'text-zinc-100');
-                b.classList.add('border-transparent', 'text-zinc-400');
+                b.classList.remove('border-teal-400', 'text-teal-300', 'shadow-[0_4px_12px_-2px_rgba(20,184,166,0.3)]');
+                b.classList.add('border-transparent', 'text-slate-400');
                 if(b.dataset.target === targetId) {
-                    b.classList.remove('border-transparent', 'text-zinc-400');
-                    b.classList.add('border-emerald-500', 'text-zinc-100');
+                    b.classList.remove('border-transparent', 'text-slate-400');
+                    b.classList.add('border-teal-400', 'text-teal-300', 'shadow-[0_4px_12px_-2px_rgba(20,184,166,0.3)]');
                 }
             });
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -370,8 +397,151 @@
             document.getElementById('latency-ms').innerText = `${ms}ms`;
         }, 2000);
 
-        // --- Chart.js Setup ---
+        // --- Chart.js Setup: Enterprise GMV Rupee Share (₹ Volume) ---
         let railChartInstance = null;
+        let pulseTimer = null;
+        let lastProcessedEventId = null;
+        let chartScope = 'live'; // 'live' or 'all_time'
+        let sessionEvents = [];
+
+        function setChartScope(scope) {
+            chartScope = scope;
+            const liveBtn = document.getElementById('scope-live-btn');
+            const allBtn = document.getElementById('scope-all-btn');
+            
+            if (scope === 'live') {
+                liveBtn.className = 'px-2.5 py-0.5 rounded-md font-bold transition-all bg-teal-500/20 text-teal-300 border border-teal-500/40';
+                allBtn.className = 'px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white transition-all border border-transparent';
+            } else {
+                allBtn.className = 'px-2.5 py-0.5 rounded-md font-bold transition-all bg-teal-500/20 text-teal-300 border border-teal-500/40';
+                liveBtn.className = 'px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white transition-all border border-transparent';
+            }
+            
+            if (currentData) {
+                updateChartData(currentData);
+            }
+        }
+
+        function triggerCenterPulse(action, cohort) {
+            const badge = document.getElementById('center-badge');
+            const text = document.getElementById('center-text');
+            const subtext = document.getElementById('center-subtext');
+            if (!badge || !text || !subtext) return;
+            
+            subtext.dataset.pulsing = "true";
+            clearTimeout(pulseTimer);
+            
+            let label = "+1 EVENT ROUTED";
+            let bgClasses = "bg-teal-500/20 text-teal-300 border-teal-500/60 shadow-[0_0_15px_rgba(20,184,166,0.4)]";
+            
+            if (action === 'REQUIRES_HUMAN_APPROVAL' || action.includes('BLOCKED_BY_GUARDIAN')) {
+                label = "+1 HIGH-VALUE HOLD";
+                bgClasses = "bg-rose-500/20 text-rose-400 border-rose-500/60 shadow-[0_0_15px_rgba(244,63,94,0.4)] animate-pulse";
+            } else if (action === 'DYNAMIC_LINK_SENT' || cohort === 'CONSUMER_CHECKOUT_DROP') {
+                label = "+1 DYNAMIC LINK";
+                bgClasses = "bg-emerald-500/20 text-emerald-300 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.4)] animate-pulse";
+            } else if (action === 'SILENT_RETRY_QUEUED' || cohort === 'TECHNICAL_DOWNTIME') {
+                label = "+1 SILENT RETRY";
+                bgClasses = "bg-blue-500/20 text-blue-300 border-blue-500/60 shadow-[0_0_15px_rgba(59,130,246,0.4)] animate-pulse";
+            } else if (action.includes('AUTOPAY') || cohort === 'MANDATE_DEGRADATION') {
+                label = "+1 MANDATE MIGRATION";
+                bgClasses = "bg-purple-500/20 text-purple-300 border-purple-500/60 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse";
+            } else if (cohort === 'B2B_RECEIVABLE_OVERDUE' || action.includes('B2B')) {
+                label = "+1 B2B DISCOUNT";
+                bgClasses = "bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-[0_0_15px_rgba(245,158,11,0.4)] animate-pulse";
+            }
+            
+            badge.className = `px-2.5 py-1 rounded-md text-[9px] font-mono font-bold uppercase transition-all duration-300 border ${bgClasses}`;
+            text.innerText = label;
+            subtext.innerText = "IMPACT DETECTED";
+            subtext.className = "text-[9px] font-mono text-teal-400 mt-1 font-bold animate-pulse";
+            
+            pulseTimer = setTimeout(() => {
+                delete subtext.dataset.pulsing;
+                badge.className = "px-2.5 py-1 rounded-md text-[9px] font-mono font-bold uppercase transition-all duration-300 bg-[#050505]/80 text-teal-300 border border-teal-500/40";
+                if (chartScope === 'live') {
+                    const totalLive = sessionEvents.reduce((acc, evt) => acc + (evt.amount_inr || 0), 0);
+                    text.innerText = totalLive > 0 ? `₹${totalLive.toLocaleString('en-IN')}` : "STANDBY";
+                    subtext.innerText = totalLive > 0 ? "LIVE SESSION GMV" : "AWAITING INJECTION";
+                } else {
+                    text.innerText = `${currentData ? currentData.recovery_rate_pct.toFixed(1) : '80.2'}%`;
+                    subtext.innerText = "RECOVERY HEALTH";
+                }
+                subtext.className = "text-[9px] font-mono text-slate-400 mt-1 font-bold tracking-wider";
+            }, 2500);
+        }
+
+        function updateChartData(data) {
+            if (!railChartInstance) return;
+            
+            let silent_retries = 0;
+            let dynamic_links = 0;
+            let mandate_migrations = 0;
+            let high_value_holds = 0;
+            let b2b_overdue = 0;
+            
+            if (chartScope === 'live') {
+                sessionEvents.forEach(evt => {
+                    const amt = evt.amount_inr || (evt.payload_raw ? evt.payload_raw.amount_inr || evt.payload_raw.amount || 0 : 0);
+                    const cohort = evt.cohort || '';
+                    const action = evt.action_taken || '';
+                    const isHV = (action.includes('BLOCKED') || action.includes('REQUIRES_HUMAN')) && amt > 15000;
+                    
+                    if (cohort === 'B2B_RECEIVABLE_OVERDUE') b2b_overdue += amt;
+                    else if (isHV) high_value_holds += amt;
+                    else if (cohort === 'TECHNICAL_DOWNTIME' || action.includes('RETRY')) silent_retries += amt;
+                    else if (cohort === 'MANDATE_DEGRADATION' || action.includes('MIGRAT')) mandate_migrations += amt;
+                    else if (cohort === 'CONSUMER_CHECKOUT_DROP' || action.includes('LINK')) dynamic_links += amt;
+                    else dynamic_links += amt;
+                });
+                
+                const totalLive = silent_retries + dynamic_links + mandate_migrations + high_value_holds + b2b_overdue;
+                const centerText = document.getElementById('center-text');
+                const centerSub = document.getElementById('center-subtext');
+                
+                if (centerSub && !centerSub.dataset.pulsing) {
+                    if (totalLive === 0) {
+                        centerText.innerText = "STANDBY";
+                        centerSub.innerText = "AWAITING INJECTION";
+                    } else {
+                        centerText.innerText = `₹${totalLive.toLocaleString('en-IN')}`;
+                        centerSub.innerText = "LIVE SESSION GMV";
+                    }
+                }
+            } else {
+                let gmv = data ? data.gmv_by_rail : null;
+                if (!gmv || Object.keys(gmv).length === 0) {
+                    const rb = data ? data.rail_breakdown || {} : {};
+                    gmv = {
+                        silent_retries: (rb.silent_retries || 0) * 12500,
+                        dynamic_links: (rb.dynamic_links || 0) * 18000,
+                        mandate_migrations: (rb.mandate_migrations || 0) * 14500,
+                        high_value_holds: (rb.high_value_holds || 0) * 28000,
+                        b2b_overdue: (rb.b2b_overdue || 0) * 35000
+                    };
+                }
+                
+                silent_retries = gmv.silent_retries || 0;
+                dynamic_links = gmv.dynamic_links || 0;
+                mandate_migrations = gmv.mandate_migrations || 0;
+                high_value_holds = gmv.high_value_holds || 0;
+                b2b_overdue = gmv.b2b_overdue || 0;
+                
+                const centerText = document.getElementById('center-text');
+                const centerSub = document.getElementById('center-subtext');
+                if (centerSub && !centerSub.dataset.pulsing) {
+                    const rate = (data && data.recovery_rate_pct !== undefined) ? data.recovery_rate_pct.toFixed(1) : '80.2';
+                    centerText.innerText = `${rate}%`;
+                    centerSub.innerText = "RECOVERY HEALTH";
+                }
+            }
+            
+            railChartInstance.data.datasets[0].data = [
+                silent_retries, dynamic_links, mandate_migrations, high_value_holds, b2b_overdue
+            ];
+            railChartInstance.update('active');
+        }
+
         function initChart() {
             const ctx = document.getElementById('railChart').getContext('2d');
             railChartInstance = new Chart(ctx, {
@@ -380,17 +550,55 @@
                     labels: ['Silent Retries', 'Dynamic Links', 'Mandate Migrations', 'High-Value Holds', 'B2B Overdue'],
                     datasets: [{
                         data: [0, 0, 0, 0, 0],
-                        backgroundColor: ['#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#f59e0b'],
+                        backgroundColor: ['#3B82F6', '#10B981', '#A855F7', '#F43F5E', '#F59E0B'],
                         borderWidth: 0,
-                        hoverOffset: 4
+                        hoverOffset: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '75%',
+                    cutout: '72%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { color: '#a1a1aa', font: { family: 'JetBrains Mono', size: 10 } } }
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { 
+                                color: '#F8FAFC', 
+                                font: { family: 'JetBrains Mono', size: 10, weight: 'bold' },
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        const dataset = data.datasets[0];
+                                        const total = dataset.data.reduce((a, b) => a + b, 0);
+                                        return data.labels.map((label, i) => {
+                                            const val = dataset.data[i] || 0;
+                                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : '0.0';
+                                            const fill = dataset.backgroundColor[i];
+                                            return {
+                                                text: `${label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`,
+                                                fillStyle: fill,
+                                                strokeStyle: fill,
+                                                lineWidth: 0,
+                                                fontColor: '#F8FAFC',
+                                                hidden: isNaN(dataset.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            } 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const val = context.raw || 0;
+                                    const pct = total > 0 ? ((val / total) * 100).toFixed(1) : '0.0';
+                                    return ` ${context.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)`;
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -401,43 +609,55 @@
         let currentData = null;
         
         const getBadgeColor = (action) => {
-            if (action.includes('HALT') || action.includes('BLOCKED')) return 'text-red-400 border-red-500/30 bg-red-500/10';
-            if (action.includes('DEFERRED')) return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
-            if (action.includes('SENT') || action.includes('QUEUED') || action.includes('SUCCESS') || action.includes('CREATED')) return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
-            return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+            if (!action) return 'text-slate-400 border-slate-700/50 bg-[#050505]';
+            if (action.includes('HALT') || action.includes('BLOCKED')) return 'text-rose-400 border-rose-500/40 bg-rose-500/10 shadow-[0_0_10px_rgba(244,63,94,0.2)]';
+            if (action.includes('DEFERRED')) return 'text-amber-300 border-amber-500/40 bg-amber-500/10';
+            if (action.includes('SENT') || action.includes('QUEUED') || action.includes('SUCCESS') || action.includes('CREATED')) return 'text-teal-300 border-teal-500/40 bg-teal-500/10 shadow-[0_0_10px_rgba(20,184,166,0.2)]';
+            return 'text-slate-400 border-slate-700/50 bg-[#050505]';
         };
 
         async function fetchMetrics() {
             try {
                 const res = await fetch('/api/metrics');
+                if (!res.ok) return;
                 const data = await res.json();
                 currentData = data;
                 
-                // KPIs
-                document.getElementById('kpi-risk').innerText = formatCurrency(data.total_gmv_at_risk);
-                document.getElementById('kpi-recovered').innerText = formatCurrency(data.total_gmv_recovered);
-                document.getElementById('kpi-rate').innerText = data.recovery_rate_pct.toFixed(1);
-                document.getElementById('kpi-blocks').innerText = data.total_events_processed;
+                // Update KPI Cards
+                if (document.getElementById('kpi-risk')) {
+                    document.getElementById('kpi-risk').innerText = data.total_gmv_at_risk.toLocaleString('en-IN');
+                }
+                if (document.getElementById('kpi-recovered')) {
+                    document.getElementById('kpi-recovered').innerText = data.total_gmv_recovered.toLocaleString('en-IN');
+                }
+                if (document.getElementById('kpi-rate')) {
+                    document.getElementById('kpi-rate').innerText = data.recovery_rate_pct !== undefined ? data.recovery_rate_pct.toFixed(1) : '0.0';
+                }
+                if (document.getElementById('kpi-blocks')) {
+                    document.getElementById('kpi-blocks').innerText = data.total_events_processed;
+                }
                 
-                // Ledger Badge
+                // Ledger Badge (Mint Green Pulse)
                 const badge = document.getElementById('ledger-badge');
                 const dot = document.getElementById('ledger-dot');
                 const text = document.getElementById('ledger-text');
-                if (data.ledger_status.is_valid) {
-                    badge.className = 'flex items-center space-x-2 px-3 py-1.5 rounded bg-emerald-500/10 border border-emerald-500/30 transition-colors duration-300';
-                    dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
-                    text.innerText = 'CHAIN VERIFIED';
-                    text.className = 'text-xs font-mono font-bold text-emerald-400';
-                } else {
-                    badge.className = 'flex items-center space-x-2 px-3 py-1.5 rounded bg-red-500/10 border border-red-500/30 transition-colors duration-300';
-                    dot.className = 'w-2 h-2 rounded-full bg-red-500 animate-pulse';
-                    text.innerText = 'TAMPER DETECTED';
-                    text.className = 'text-xs font-mono font-bold text-red-400';
+                if (badge && dot && text && data.ledger_status) {
+                    if (data.ledger_status.is_valid) {
+                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-teal-500/10 border border-teal-500/30 shadow-[0_0_12px_rgba(20,184,166,0.2)] transition-colors duration-300';
+                        dot.className = 'w-2 h-2 rounded-full bg-teal-400 animate-pulse';
+                        text.innerText = 'CHAIN VERIFIED';
+                        text.className = 'text-xs font-mono font-bold text-teal-300';
+                    } else {
+                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.2)] transition-colors duration-300';
+                        dot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-pulse';
+                        text.innerText = 'TAMPER DETECTED';
+                        text.className = 'text-xs font-mono font-bold text-rose-400';
+                    }
                 }
                 
                 // Guardrails
                 if (document.getElementById('kpi-guardrails')) {
-                    document.getElementById('kpi-guardrails').innerText = data.active_guardrails_count;
+                    document.getElementById('kpi-guardrails').innerText = data.active_guardrails_count || 0;
                 }
                 if (data.latest_guardrails) {
                     updateGuardrailUI('trai', data.latest_guardrails['TRAI_QUIET_HOURS']);
@@ -446,18 +666,21 @@
                     updateGuardrailUI('cap', data.latest_guardrails['HARASSMENT_CAP']);
                 }
                 
-                // Update Chart
-                if(railChartInstance) {
-                    const rb = data.rail_breakdown;
-                    railChartInstance.data.datasets[0].data = [
-                        rb.silent_retries, rb.dynamic_links, rb.mandate_migrations, rb.high_value_holds, rb.b2b_overdue
-                    ];
-                    railChartInstance.update();
+                // Trigger Center Pulse if a new event was processed
+                if (data.recent_events && data.recent_events.length > 0) {
+                    const latestEvent = data.recent_events[0];
+                    if (lastProcessedEventId && lastProcessedEventId !== latestEvent.event_id) {
+                        triggerCenterPulse(latestEvent.action_taken || '', latestEvent.cohort || '');
+                    }
+                    lastProcessedEventId = latestEvent.event_id;
                 }
+
+                // Update Chart smoothly
+                updateChartData(data);
                 
                 // Update Feed
-                renderFeed(data.recent_events);
-                renderAuditExplorer(data.recent_events);
+                renderFeed(data.recent_events || []);
+                renderAuditExplorer(data.recent_events || []);
                 
             } catch (error) {
                 console.error("Error fetching metrics:", error);
@@ -473,36 +696,53 @@
             text.innerText = status;
             
             if(status === 'ENFORCING') {
-                dot.className = 'w-2 h-2 rounded-full mr-2 bg-emerald-500';
-                text.className = 'font-bold text-emerald-400';
-                panel.className = 'glass-panel p-6 rounded-lg transition-colors duration-300 border border-emerald-500/20 bg-zinc-900/50';
+                dot.className = 'w-2 h-2 rounded-full mr-2 bg-teal-400';
+                text.className = 'font-bold text-teal-400';
+                panel.className = 'bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10';
             } else if(status === 'TRIGGERED - BLOCKED') {
-                dot.className = 'w-2 h-2 rounded-full mr-2 bg-red-500 animate-pulse';
-                text.className = 'font-bold text-red-400';
-                panel.className = 'glass-panel p-6 rounded-lg transition-colors duration-300 border border-red-500/40 bg-red-500/5';
+                dot.className = 'w-2 h-2 rounded-full mr-2 bg-rose-500 animate-pulse';
+                text.className = 'font-bold text-rose-400';
+                panel.className = 'bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-rose-500/40 bg-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.2)]';
             } else {
                 // SKIPPED
-                dot.className = 'w-2 h-2 rounded-full mr-2 bg-zinc-600';
-                text.className = 'font-bold text-zinc-500';
-                panel.className = 'glass-panel p-6 rounded-lg transition-colors duration-300 border border-zinc-800 opacity-60';
+                dot.className = 'w-2 h-2 rounded-full mr-2 bg-[#1e1e24]';
+                text.className = 'font-bold text-slate-500';
+                panel.className = 'bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] opacity-50';
             }
         }
 
         function renderFeed(events) {
             const tbody = document.getElementById('live-feed-body');
-            const search = document.getElementById('feed-search').value.toLowerCase();
+            if (!tbody) return;
+            
+            const searchInput = document.getElementById('feed-search');
+            const search = searchInput ? searchInput.value.trim().toLowerCase() : '';
             
             tbody.innerHTML = '';
             
-            const filtered = events.filter(e => e.cohort.toLowerCase().includes(search) || e.event_id.toLowerCase().includes(search));
+            if (!events || events.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-500 font-mono">No events found in stream...</td></tr>`;
+                return;
+            }
+            
+            const filtered = events.filter(e => {
+                if (!e) return false;
+                if (!search) return true;
+                const cohort = (e.cohort || '').toLowerCase();
+                const event_id = (e.event_id || '').toLowerCase();
+                const action = (e.action_taken || '').toLowerCase();
+                return cohort.includes(search) || event_id.includes(search) || action.includes(search);
+            });
             
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-zinc-600 font-sans">No events found...</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-500 font-mono">No matching events found...</td></tr>`;
                 return;
             }
             
             filtered.forEach((event, idx) => {
                 const bClasses = getBadgeColor(event.action_taken);
+                const safeHash = event.current_hash || event.ledger_hash || event.hash || '0000000000000000';
+                const hashShort = safeHash.substring(0, 16);
                 
                 // Safely convert payload to a string we can embed
                 const rawJson = event.payload_raw ? encodeURIComponent(JSON.stringify(event.payload_raw)) : '';
@@ -510,20 +750,20 @@
                 // Detect link
                 let linkBtnHtml = '';
                 if(event.payload_raw && event.payload_raw.link_data && event.payload_raw.link_data.short_url) {
-                    linkBtnHtml = `<a href="${event.payload_raw.link_data.short_url}" target="_blank" class="ml-2 px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded border border-zinc-700 transition">Link</a>`;
+                    linkBtnHtml = `<a href="${event.payload_raw.link_data.short_url}" target="_blank" class="ml-2 px-2 py-1 bg-[#050505] hover:bg-teal-900/30 text-slate-200 rounded border border-[#1e1e24] transition">Link</a>`;
                 }
                 
                 const tr = `
-                <tr class="hover:bg-zinc-800/30 transition-colors group">
-                    <td class="py-3 px-4 text-zinc-500">${formatTime(event.timestamp)}</td>
-                    <td class="py-3 px-4 font-bold text-zinc-300">${event.event_id}</td>
-                    <td class="py-3 px-4">${event.cohort}</td>
+                <tr class="hover:bg-teal-950/20 transition-colors group">
+                    <td class="py-3 px-4 text-slate-400">${formatTime(event.timestamp)}</td>
+                    <td class="py-3 px-4 font-bold text-white">${event.event_id}</td>
+                    <td class="py-3 px-4 text-slate-300">${event.cohort || 'N/A'}</td>
                     <td class="py-3 px-4">
-                        <span class="px-2 py-0.5 rounded text-[9px] border ${bClasses}">${event.action_taken}</span>
+                        <span class="px-2.5 py-0.5 rounded text-[9px] border font-mono ${bClasses}">${event.action_taken || 'PROCESSED'}</span>
                     </td>
-                    <td class="py-3 px-4 text-zinc-600 truncate max-w-[120px]" title="${event.current_hash}">${event.current_hash.substring(0,16)}...</td>
+                    <td class="py-3 px-4 text-slate-400 truncate max-w-[120px]" title="${safeHash}">${hashShort}...</td>
                     <td class="py-3 px-4 text-right">
-                        <button onclick="openDrawer('${event.event_id}', '${event.current_hash}', '${rawJson}')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded border border-zinc-700 transition">Inspect</button>
+                        <button onclick="openDrawer('${event.event_id}', '${safeHash}', '${rawJson}')" class="px-2.5 py-1 bg-[#050505] hover:bg-teal-900/30 text-slate-200 rounded-lg border border-[#1e1e24] transition font-mono">Inspect</button>
                         ${linkBtnHtml}
                     </td>
                 </tr>
@@ -561,61 +801,133 @@
             document.getElementById('drawer-backdrop').classList.add('hidden');
         }
 
-        // --- Audit Explorer ---
         function renderAuditExplorer(events) {
             const container = document.getElementById('audit-feed');
             container.innerHTML = '';
             
             events.forEach((event, idx) => {
                 const isLatest = idx === 0;
-                const html = `
-                <div class="bg-zinc-900/80 border ${isLatest ? 'border-emerald-500/50' : 'border-zinc-800'} rounded p-4 relative group hover:border-zinc-600 transition-colors">
-                    ${isLatest ? '<div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div><div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500"></div>' : ''}
+                const safeHash = event.current_hash || event.ledger_hash || event.hash || '0000000000000000';
+                let html = `
+                <div id="block-${event.event_id}" class="bg-[#0e0e10] border ${isLatest ? 'border-teal-500/60 shadow-[0_0_15px_rgba(20,184,166,0.25)]' : 'border-[#1e1e24]'} rounded-xl p-4 relative group hover:border-indigo-500/40 transition-all duration-300">
+                    ${isLatest ? '<div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-teal-400 animate-ping"></div><div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-teal-400"></div>' : ''}
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-zinc-300 uppercase">Event: ${event.event_id}</span>
-                        <span class="text-[10px] text-zinc-500 font-mono">${new Date(event.timestamp).toISOString()}</span>
+                        <span class="text-xs font-bold text-white font-mono uppercase">Event: ${event.event_id}</span>
+                        <span class="text-[10px] text-slate-400 font-mono">${new Date(event.timestamp).toISOString()}</span>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                         <div>
-                            <p class="text-[9px] uppercase text-zinc-600 mb-1">Action Recorded</p>
-                            <p class="text-xs font-mono text-emerald-400">${event.action_taken}</p>
+                            <p class="text-[9px] uppercase font-mono text-slate-400 mb-1">Action Recorded</p>
+                            <p class="text-xs font-mono text-teal-300 font-bold">${event.action_taken}</p>
                         </div>
                         <div>
-                            <p class="text-[9px] uppercase text-zinc-600 mb-1">SHA-256 Block Hash</p>
-                            <p class="text-[10px] font-mono text-zinc-400 break-all bg-zinc-950 p-1.5 rounded border border-zinc-800">${event.current_hash}</p>
+                            <p class="text-[9px] uppercase font-mono text-slate-400 mb-1">SHA-256 Block Hash</p>
+                            <p id="hash-${event.event_id}" class="text-[10px] font-mono text-slate-300 break-all bg-[#050505] p-1.5 rounded-lg border border-[#1e1e24] transition-colors duration-300">${safeHash}</p>
                         </div>
                     </div>
                 </div>
                 `;
+                
+                // Add chain link below every block except the last one
+                if (idx < events.length - 1) {
+                    html += `<div id="link-${event.event_id}" class="h-6 w-1 bg-gradient-to-b from-teal-500/60 to-indigo-500/60 shadow-[0_0_8px_rgba(20,184,166,0.4)] mx-auto transition-all duration-300"></div>`;
+                }
+                
                 container.innerHTML += html;
             });
         }
         
+        async function simulateHack() {
+            try {
+                await fetch('/api/simulate_hack', { method: 'POST' });
+                alert("Simulated database tampering! Click 'Verify Chain Integrity' to scan.");
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        
+        async function rollbackChain() {
+            try {
+                const msg = document.getElementById('chain-verify-msg');
+                msg.classList.remove('hidden');
+                msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30 animate-pulse";
+                msg.innerText = "> Executing cryptographic rollback... quarantining corrupted data...";
+                
+                await fetch('/api/rollback', { method: 'POST' });
+                
+                setTimeout(() => {
+                    alert("Rollback successful. Corrupted blocks isolated and purged. Re-verifying ledger.");
+                    document.getElementById('btn-rollback').classList.add('hidden');
+                    verifyChainUI(); // This will trigger fetchMetrics again and update the UI
+                }, 1000);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
         function verifyChainUI() {
             const msg = document.getElementById('chain-verify-msg');
             msg.classList.remove('hidden');
-            msg.className = "mb-4 text-xs font-mono px-3 py-2 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 animate-pulse";
+            msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-[#0e0e10] text-slate-400 border border-[#1e1e24] animate-pulse";
             msg.innerText = "> Running cryptographic recalculation across all nodes...";
             
-            setTimeout(() => {
-                if (currentData && currentData.ledger_status.is_valid) {
-                    msg.className = "mb-4 text-xs font-mono px-3 py-2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
-                    msg.innerText = `> SUCCESS: Evaluated ${currentData.ledger_status.total_records} blocks. Chain integrity is 100% valid. No tampering detected.`;
-                } else {
-                    msg.className = "mb-4 text-xs font-mono px-3 py-2 rounded bg-red-500/10 text-red-400 border border-red-500/30";
-                    msg.innerText = `> ALERT: Hash mismatch detected at block ID: ${currentData?.ledger_status?.broken_at_id || 'UNKNOWN'}. Data integrity compromised.`;
-                }
-            }, 1500);
+            fetch('/api/metrics').then(r => r.json()).then(data => {
+                currentData = data;
+                setTimeout(() => {
+                    if (data.ledger_status.is_valid) {
+                        msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-teal-500/10 text-teal-300 border border-teal-500/30 shadow-[0_0_12px_rgba(20,184,166,0.2)]";
+                        msg.innerText = `> SUCCESS: Evaluated ${data.ledger_status.total_records} blocks. Chain integrity is 100% valid. No tampering detected.`;
+                    } else {
+                        msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.2)]";
+                        const brokenId = data.ledger_status.broken_at_event_id;
+                        msg.innerText = `> ALERT: Hash mismatch detected at event ID: ${brokenId || 'UNKNOWN'}. Data integrity compromised.`;
+                        
+                        if (brokenId) {
+                            const block = document.getElementById(`block-${brokenId}`);
+                            const link = document.getElementById(`link-${brokenId}`);
+                            const hash = document.getElementById(`hash-${brokenId}`);
+                            
+                            if(block) {
+                                block.className = "bg-rose-500/10 border border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.25)] rounded-xl p-4 relative group transition-all duration-300";
+                            }
+                            if(link) {
+                                link.className = "h-6 w-1 mx-auto transition-all duration-300 border-l-2 border-r-2 border-rose-500 border-dashed bg-transparent animate-pulse";
+                            }
+                            if(hash) {
+                                hash.className = "text-[10px] font-bold font-mono text-rose-400 break-all bg-rose-950 p-1.5 rounded-lg border border-rose-800 transition-colors duration-300 animate-pulse";
+                                hash.innerText = "CRITICAL: HASH MISMATCH - DATA TAMPERED";
+                            }
+                        }
+                        document.getElementById('btn-rollback').classList.remove('hidden');
+                    }
+                    
+                    // Update global UI badges
+                    const badge = document.getElementById('ledger-badge');
+                    const dot = document.getElementById('ledger-dot');
+                    const text = document.getElementById('ledger-text');
+                    if (data.ledger_status.is_valid) {
+                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-teal-500/10 border border-teal-500/30 shadow-[0_0_12px_rgba(20,184,166,0.2)] transition-colors duration-300';
+                        dot.className = 'w-2 h-2 rounded-full bg-teal-400 animate-pulse';
+                        text.innerText = 'CHAIN VERIFIED';
+                        text.className = 'text-xs font-mono font-bold text-teal-300';
+                    } else {
+                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.2)] transition-colors duration-300';
+                        dot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-pulse';
+                        text.innerText = 'TAMPER DETECTED';
+                        text.className = 'text-xs font-mono font-bold text-rose-400';
+                    }
+                }, 1500);
+            });
         }
 
         // --- Simulator Logic ---
         function loadPreset(type) {
             const presets = {
-                '503': { err: '503', desc: 'Gateway Error', amt: 1200 },
-                'cart_drop': { err: 'ABORTED', desc: 'User closed window', amt: 2500 },
-                'high_value': { err: 'ABORTED', desc: 'User dropped', amt: 25000 },
-                'mandate': { err: 'MANDATE_DEGRADED', desc: 'Autopay failed', amt: 499 },
-                'b2b': { err: 'INVOICE_OVERDUE', desc: 'Overdue invoice', amt: 150000 }
+                '503': { err: '503', desc: 'Gateway Error', amt: 12500 },
+                'cart_drop': { err: 'ABORTED', desc: 'User closed window', amt: 12000 },
+                'high_value': { err: 'ABORTED', desc: 'User dropped', amt: 28000 },
+                'mandate': { err: 'MANDATE_DEGRADED', desc: 'Autopay failed', amt: 14500 },
+                'b2b': { err: 'INVOICE_OVERDUE', desc: 'Overdue invoice', amt: 35000 }
             };
             const p = presets[type];
             document.getElementById('sim-id').value = generateId(`evt_${type}`);
@@ -650,8 +962,8 @@
             overlay.classList.add('flex');
             closeBtn.classList.add('hidden');
             statusText.innerText = '';
-            steps.forEach(s => s.classList.add('opacity-30', 'text-zinc-400'));
-            steps.forEach(s => s.classList.remove('text-emerald-400', 'font-bold'));
+            steps.forEach(s => s.classList.add('opacity-30', 'text-slate-400'));
+            steps.forEach(s => s.classList.remove('text-teal-400', 'font-bold'));
             
             // API Call
             try {
@@ -660,33 +972,41 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
                 const data = await res.json();
+                data.current_hash = data.current_hash || data.ledger_hash || '0000000000000000';
+                data.timestamp = data.timestamp || new Date().toISOString();
                 
                 // Animate steps
                 const delay = ms => new Promise(res => setTimeout(res, ms));
                 
                 await delay(400);
-                steps[0].classList.remove('opacity-30'); steps[0].classList.add('text-emerald-400');
+                steps[0].classList.remove('opacity-30'); steps[0].classList.add('text-teal-400');
                 
                 await delay(400);
-                steps[1].classList.remove('opacity-30'); steps[1].classList.add('text-emerald-400');
+                steps[1].classList.remove('opacity-30'); steps[1].classList.add('text-teal-400');
                 
                 await delay(400);
-                steps[2].classList.remove('opacity-30'); steps[2].classList.add('text-emerald-400');
+                steps[2].classList.remove('opacity-30'); steps[2].classList.add('text-teal-400');
                 steps[2].innerText = `▶ Routing Action: ${data.action_taken || 'ALREADY_PROCESSED'}`;
                 
                 await delay(400);
-                steps[3].classList.remove('opacity-30'); steps[3].classList.add('text-emerald-400', 'font-bold');
+                steps[3].classList.remove('opacity-30'); steps[3].classList.add('text-teal-400', 'font-bold');
+                steps[3].innerText = `✓ Action Complete: ${data.action_taken || 'SUCCESS'}`;
                 
                 closeBtn.classList.remove('hidden');
                 
-                // Refresh data instantly
+                // Refresh data instantly & trigger center donut pulse animation
+                sessionEvents.unshift(data);
                 fetchMetrics();
+                triggerCenterPulse(data.action_taken || '', data.cohort || '');
                 
             } catch (err) {
                 console.error(err);
                 statusText.innerText = 'Error executing pipeline';
-                statusText.classList.add('text-red-400');
+                statusText.classList.add('text-rose-400');
                 overlay.classList.add('hidden');
                 overlay.classList.remove('flex');
             }

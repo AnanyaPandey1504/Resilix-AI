@@ -126,12 +126,12 @@ def test_get_dashboard():
     response = client.get("/dashboard")
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
-    assert "PulseRecover // Enterprise" in response.text
+    assert "Resilix AI // Enterprise Revenue Resilience" in response.text
 
 def test_health_check():
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "healthy", "service": "PulseRecover-Pro"}
+    assert response.json() == {"status": "healthy", "service": "Resilix AI"}
 
 def test_api_simulate():
     payload = {

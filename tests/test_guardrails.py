@@ -38,7 +38,7 @@ def test_ledger_integrity():
     res = verify_ledger()
     assert res["is_valid"] is True
     assert res["total_records"] == 2
-    assert res["broken_at_id"] is None
+    assert res["broken_at_event_id"] is None
 
 def test_ledger_tampering():
     append_audit_record("evt_1", "INSUFFICIENT_FUNDS", "SEND_EMAIL", {"amount": 100})
@@ -60,12 +60,12 @@ def test_ledger_tampering():
     res = verify_ledger()
     assert res["is_valid"] is False
     # row_id 2 should be the broken one since its hash will not match the computed hash of the modified data
-    assert res["broken_at_id"] == 2
+    assert res["broken_at_event_id"] == "evt_2"
 
 def test_check_trai_quiet_hours():
     ist = ZoneInfo("Asia/Kolkata")
-    # 11:00 PM IST (23:00) -> Should be blocked
-    dt_blocked = datetime(2023, 10, 1, 23, 0, 0, tzinfo=ist)
+    # 9:30 PM IST (21:30) -> Should be blocked (9 PM - 9 AM IST quiet hours)
+    dt_blocked = datetime(2023, 10, 1, 21, 30, 0, tzinfo=ist)
     valid, reason = check_trai_quiet_hours(dt_blocked)
     assert valid is False
     assert reason == "TRAI_QUIET_HOURS_DEFERRED_TO_0801_AM"

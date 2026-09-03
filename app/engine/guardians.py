@@ -11,7 +11,7 @@ def check_trai_quiet_hours(check_dt: datetime = None) -> tuple[bool, str]:
         check_dt = check_dt.astimezone(ist)
         
     hour = check_dt.hour
-    if hour >= 20 or hour < 8:
+    if hour >= 21 or hour < 9:
         return (False, "TRAI_QUIET_HOURS_DEFERRED_TO_0801_AM")
     return (True, "ALLOWED")
 

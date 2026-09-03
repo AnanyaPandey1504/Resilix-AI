@@ -1,10 +1,10 @@
-# PulseRecover Pro // Track 03: AI Revenue Recovery
+# Resilix AI // Autonomous Revenue Resilience
 
 ![Build Status](https://img.shields.io/badge/Build-Passing-emerald?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-zinc?style=for-the-badge)
 
-PulseRecover Pro is a production-grade, AI-driven FinTech backend designed to autonomously recover failed transactions, combat cart abandonment, and rescue degrading mandates without violating stringent telecommunication and financial compliance regulations.
+Resilix AI is a production-grade, AI-driven FinTech engine designed to autonomously recover failed transactions, combat cart abandonment, and rescue degrading mandates without violating stringent telecommunication and financial compliance regulations.
 
 Built for the **Razorpay AI Buildathon (Track 03)**, this engine acts as a 4-Rail State Machine powered by real-time telemetry, embedded policy guardians, and an immutable SHA-256 cryptographic audit ledger.
 
@@ -52,7 +52,7 @@ graph TD
 
 ## 🛡️ Security & Compliance Guarantees
 
-PulseRecover isn't just about recovering revenue; it's about recovering it legally and safely.
+Resilix AI isn't just about recovering revenue; it's about recovering it legally and safely.
 
 - **Cryptographic Audit Ledger**: Every recovery action is chained using `SHA-256` hashing (linking `prev_hash` to `current_hash`). The UI actively verifies this chain to detect any manual database tampering.
 - **TRAI Quiet Hours Check**: Blocks SMS/WhatsApp dispatches between 9:00 PM and 9:00 AM IST to strictly comply with Indian telecommunication anti-harassment laws.
