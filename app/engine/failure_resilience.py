@@ -1,5 +1,6 @@
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 import razorpay
+import requests
 from app.services.razorpay_client import create_dynamic_payment_link
 
 def handle_retry_error(retry_state):
@@ -22,7 +23,7 @@ def handle_retry_error(retry_state):
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=0.1, min=0.1, max=1.0),
-    retry=retry_if_exception_type((ConnectionError, TimeoutError, razorpay.errors.ServerError, razorpay.errors.BadRequestError)),
+    retry=retry_if_exception_type((ConnectionError, TimeoutError, razorpay.errors.ServerError, razorpay.errors.BadRequestError, requests.exceptions.RequestException)),
     retry_error_callback=handle_retry_error
 )
 def resilient_create_payment_link(amount_inr: float, customer_phone: str, reference_id: str, description: str = "Order Recovery Link") -> dict:

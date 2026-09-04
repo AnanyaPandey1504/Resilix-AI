@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,13 +29,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* Ambient Animations */
+        @keyframes panGrid {
+            0% { background-position: 0 0; }
+            100% { background-position: 32px 32px; }
+        }
+
         body { 
-            background-color: #050505; 
-            color: #f8fafc;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.12) 0px, transparent 45%),
-                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 45%);
-            background-attachment: fixed;
+            background-color: #FAFAFC; 
+            color: #0F172A;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            animation: panGrid 4s linear infinite;
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #050505; }
@@ -56,52 +61,111 @@
         /* Drawer slide */
         .drawer { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
         .drawer.open { transform: translateX(0); }
+        
+        /* Ambient Background Orbs */
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(80px, -80px) scale(1.2) rotate(45deg); }
+            66% { transform: translate(-60px, 60px) scale(0.8) rotate(90deg); }
+        }
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(-80px, 80px) scale(0.8) rotate(-45deg); }
+            66% { transform: translate(60px, -60px) scale(1.2) rotate(-90deg); }
+        }
+        .orb {
+            position: fixed;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            filter: blur(60px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .orb-1 { width: 500px; height: 500px; background: rgba(59, 130, 246, 0.15); top: -50px; left: -50px; animation: float1 12s ease-in-out infinite; }
+        .orb-2 { width: 600px; height: 600px; background: rgba(16, 185, 129, 0.15); bottom: -50px; right: -50px; animation: float2 14s ease-in-out infinite; }
+        .orb-3 { width: 450px; height: 450px; background: rgba(168, 85, 247, 0.15); top: 30%; left: 30%; animation: float1 16s ease-in-out infinite reverse; }
+        
+        /* Floating Glassmorphism Shapes */
+        @keyframes floatShape {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+        .shape {
+            position: fixed;
+            background: rgba(16, 185, 129, 0.03);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+            pointer-events: none;
+            bottom: -20vh;
+            border-radius: 12px;
+        }
+        .shape-1 { width: 100px; height: 100px; left: 10%; animation: floatShape 20s linear infinite; }
+        .shape-2 { width: 150px; height: 150px; left: 30%; animation: floatShape 25s linear infinite 5s; border-radius: 50%; }
+        .shape-3 { width: 80px; height: 80px; left: 60%; animation: floatShape 18s linear infinite 2s; }
+        .shape-4 { width: 120px; height: 120px; left: 85%; animation: floatShape 22s linear infinite 8s; border-radius: 30%; }
+        
+        /* Footer Animation */
+        @keyframes bounceFooter {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .footer-link:hover {
+            animation: bounceFooter 0.6s ease-in-out infinite;
+        }
     </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col">
+<body class="font-sans antialiased min-h-screen flex flex-col relative">
+    
+    <!-- Ambient Orbs & Shapes -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
 
-    <!-- Header (Significantly Broader Upper Band with Command Branding) -->
-    <header class="bg-[#0e0e10]/95 border-b border-[#1e1e24] sticky top-0 z-40 backdrop-blur-md shadow-xl shadow-teal-950/20">
-        <div class="px-10 py-7 flex justify-between items-center max-w-[1600px] mx-auto w-full">
-            <div class="flex items-center space-x-5">
-                <!-- Expanded, Ultra-Premium Logo Badge -->
-                <div class="w-16 h-16 rounded-2xl border-2 border-teal-500/40 p-1.5 bg-[#050505] shadow-[0_0_25px_rgba(20,184,166,0.3)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:border-teal-400">
-                    <img src="/static/resilix_logo.png" alt="Resilix AI Logo" class="w-full h-full object-cover rounded-xl">
+    <!-- Header (Brex Style Navigation) -->
+    <header class="bg-white/95 border-b border-slate-200 sticky top-0 z-40 backdrop-blur-md shadow-sm h-24 flex items-center">
+        <div class="px-8 flex justify-between items-center max-w-[1600px] mx-auto w-full">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-xl bg-slate-900 shadow-md flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-110 hover:shadow-lg hover:ring-2 hover:ring-emerald-400/50 cursor-pointer">
+                    <img src="/static/resilix_logo.png" alt="Resilix AI Logo" class="w-full h-full object-cover">
                 </div>
-                <!-- Prominent Brand Title with Subtitle Stacked Below -->
-                <div class="flex flex-col">
-                    <h1 class="text-2xl font-black text-white tracking-wide flex items-center">
-                        Resilix <span class="ml-2 bg-gradient-to-r from-teal-400 via-emerald-400 to-indigo-400 bg-clip-text text-transparent">AI</span>
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center transition-all duration-300 hover:text-emerald-600 cursor-pointer">
+                        Resilix
                     </h1>
-                    <span class="text-xs font-mono font-bold tracking-[0.2em] text-teal-400 uppercase mt-1">
-                        Autonomous Revenue Engine
-                    </span>
+                    <div class="h-5 w-[1px] bg-slate-300 mx-3"></div>
+                    <span class="text-xs font-medium text-slate-500 tracking-normal font-sans">Autonomous Payment Resilience & Cryptographic Settlement</span>
                 </div>
             </div>
             
-            <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-4">
                 <!-- System Metrics Bar -->
-                <div class="hidden lg:flex items-center space-x-4 text-xs font-mono text-slate-300 bg-[#050505] px-4 py-2.5 rounded-xl border border-[#1e1e24] shadow-inner">
-                    <div class="flex items-center space-x-2 border-r border-[#1e1e24] pr-4">
-                        <span class="flex h-2.5 w-2.5 relative">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-400"></span>
+                <div class="hidden lg:flex items-center space-x-3 bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-full px-3 py-1 font-sans shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-300 cursor-default">
+                    <div class="flex items-center space-x-2 border-r border-slate-300 pr-3">
+                        <span class="flex h-2 w-2 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                         </span>
-                        <span class="font-semibold">NODE: ap-south-1</span>
+                        <span class="font-medium">NODE: ap-south-1</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <span>LATENCY: <span id="latency-ms" class="text-teal-400 font-bold">34ms</span></span>
+                        <span>LATENCY: <span id="latency-ms" class="text-slate-900 font-bold font-mono">34ms</span></span>
                     </div>
                 </div>
 
-                <!-- Ledger Badge (Mint Green Pulse) -->
-                <div id="ledger-badge" class="flex items-center space-x-2.5 px-4 py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/30 shadow-[0_0_15px_rgba(20,184,166,0.25)]">
-                    <div id="ledger-dot" class="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse"></div>
-                    <span id="ledger-text" class="text-xs font-mono font-bold text-teal-300">VERIFYING...</span>
+                <!-- Ledger Badge -->
+                <div id="ledger-badge" class="flex items-center space-x-2 bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-full px-3 py-1 font-sans shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-300 cursor-default">
+                    <div id="ledger-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                    <span id="ledger-text" class="font-medium">VERIFYING...</span>
                 </div>
                 
                 <!-- Quick Action Button -->
-                <button onclick="switchTab('tab-simulator')" class="px-5 py-2.5 bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 text-white text-xs font-mono font-bold rounded-xl shadow-lg shadow-teal-950/50 border border-teal-400/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                <button onclick="switchTab('tab-simulator')" class="px-4 py-1.5 bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-sans font-medium rounded-md shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(15,23,42,0.3)] active:scale-95">
                     Simulate Event
                 </button>
             </div>
@@ -109,27 +173,32 @@
     </header>
 
     <!-- Metrics Command Bar -->
-    <div class="border-b border-[#1e1e24] bg-[#050505]/80 backdrop-blur-sm">
-        <div class="max-w-[1600px] mx-auto w-full px-8 py-4 grid grid-cols-2 md:grid-cols-5 gap-4 divide-x divide-[#1e1e24]">
-            <div class="px-4 first:pl-0">
-                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Revenue at Risk</p>
-                <p class="text-xl font-mono font-bold text-white">₹<span id="kpi-risk">0.00</span></p>
+    <div class="w-full relative z-10">
+        <div class="max-w-[1600px] mx-auto w-full px-6 py-6 grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="bg-white border border-slate-200/80 rounded-xl p-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 cursor-default relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1 relative z-10">Revenue at Risk</p>
+                <p class="text-2xl font-mono font-bold text-slate-900 mt-1 relative z-10">₹<span id="kpi-risk">0.00</span></p>
             </div>
-            <div class="px-4">
-                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">GMV Recovered</p>
-                <p class="text-xl font-mono font-bold text-teal-400">₹<span id="kpi-recovered">0.00</span></p>
+            <div class="bg-white border border-slate-200/80 rounded-xl p-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 cursor-default relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1 relative z-10">GMV Recovered</p>
+                <p class="text-2xl font-mono font-bold text-slate-900 mt-1 relative z-10">₹<span id="kpi-recovered">0.00</span></p>
             </div>
-            <div class="px-4">
-                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Recovery Rate</p>
-                <p class="text-xl font-mono font-bold text-white"><span id="kpi-rate">0.0</span><span class="text-teal-400 text-sm">%</span></p>
+            <div class="bg-white border border-slate-200/80 rounded-xl p-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 cursor-default relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1 relative z-10">Recovery Rate</p>
+                <p class="text-2xl font-mono font-bold text-slate-900 mt-1 relative z-10"><span id="kpi-rate">0.0</span><span class="text-emerald-600 text-lg ml-1">%</span></p>
             </div>
-            <div class="px-4">
-                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Active Guardrails</p>
-                <p class="text-xl font-mono font-bold text-teal-400"><span id="kpi-guardrails">4</span> <span class="text-xs text-slate-400 font-normal">Enforcing</span></p>
+            <div class="bg-white border border-slate-200/80 rounded-xl p-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] flex flex-col justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 cursor-default relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1 relative z-10">Active Guardrails</p>
+                <p class="text-2xl font-mono font-bold text-slate-900 mt-1 relative z-10"><span id="kpi-guardrails">4</span> <span class="text-sm font-sans font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md ml-1 border border-emerald-100">Enforcing</span></p>
             </div>
-            <div class="px-4">
-                <p class="text-[10px] uppercase font-mono font-semibold text-slate-400 tracking-wider mb-1">Unbroken Blocks</p>
-                <p class="text-xl font-mono font-bold text-white" id="kpi-blocks">0</p>
+            <div class="bg-white border border-slate-200/80 rounded-xl p-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 cursor-default relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1 relative z-10">Unbroken Blocks</p>
+                <p class="text-2xl font-mono font-bold text-slate-900 mt-1 relative z-10" id="kpi-blocks">0</p>
             </div>
         </div>
     </div>
@@ -137,68 +206,71 @@
     <!-- Main Workspace -->
     <div class="max-w-[1600px] mx-auto w-full px-8 py-6 flex-1 flex flex-col">
         
-        <!-- Tab Navigation (Indigo Quartz & Mint Accents) -->
-        <nav class="flex space-x-6 border-b border-[#1e1e24] mb-6">
-            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-teal-400 text-teal-300 transition-colors shadow-[0_4px_12px_-2px_rgba(20,184,166,0.3)]" data-target="tab-live">
+        <!-- Tab Navigation -->
+        <nav class="flex space-x-6 border-b border-slate-200 mb-6 px-2">
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-slate-900 text-slate-900 transition-colors shadow-none" data-target="tab-live">
                 Live Recovery Operations
             </button>
-            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-colors" data-target="tab-simulator">
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-900 transition-colors" data-target="tab-simulator">
                 Simulation Sandbox
             </button>
-            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-colors" data-target="tab-audit">
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-900 transition-colors" data-target="tab-audit">
                 Cryptographic Audit Ledger
             </button>
-            <button class="tab-btn pb-3 text-xs font-mono uppercase font-bold border-b-2 border-transparent text-slate-400 hover:text-white transition-colors" data-target="tab-rules">
+            <button class="tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-900 transition-colors" data-target="tab-rules">
                 Policy Guardians & Rules
             </button>
         </nav>            <!-- Tab 1: Live Recovery Operations -->
         <div id="tab-live" class="tab-content active flex-1">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
                 <!-- Left Panel: Live Stream -->
-                <div class="lg:col-span-3 flex flex-col h-full bg-[#0e0e10] rounded-xl overflow-hidden border border-[#1e1e24] shadow-lg shadow-teal-950/10">
-                    <div class="px-5 py-3.5 border-b border-[#1e1e24] flex justify-between items-center bg-[#050505]/80 backdrop-blur-sm">
-                        <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> Live Telemetry & Recovery Stream
+                <div class="lg:col-span-3 flex flex-col h-full bg-white rounded-xl overflow-hidden border border-slate-200/80 shadow-sm">
+                    <div class="px-5 py-3.5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/80 backdrop-blur-sm">
+                        <h2 class="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Telemetry & Recovery Stream
                         </h2>
-                        <input type="text" id="feed-search" placeholder="Filter by Cohort or Event ID..." class="bg-[#050505] border border-[#1e1e24] rounded-lg px-3 py-1.5 text-xs text-white w-64 focus:outline-none focus:border-teal-500/60 font-mono">
+                        <input type="text" id="feed-search" placeholder="Filter by Cohort or Event ID..." class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 w-64 focus:outline-none focus:border-slate-400 font-mono shadow-sm">
                     </div>
                     <div class="flex-1 overflow-auto">
                         <table class="w-full text-left border-collapse text-xs">
-                            <thead class="bg-[#050505]/90 text-slate-400 sticky top-0 z-10 border-b border-[#1e1e24] font-mono text-[10px] uppercase">
+                            <thead class="bg-slate-50/80 text-slate-500 sticky top-0 z-10 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider">
                                 <tr>
-                                    <th class="py-3 px-4 font-bold">Timestamp</th>
-                                    <th class="py-3 px-4 font-bold">Event ID</th>
-                                    <th class="py-3 px-4 font-bold">Rail Cohort</th>
-                                    <th class="py-3 px-4 font-bold">Action Taken</th>
-                                    <th class="py-3 px-4 font-bold">Block Hash</th>
-                                    <th class="py-3 px-4 font-bold text-right">Actions</th>
+                                    <th class="py-3 px-4">Timestamp</th>
+                                    <th class="py-3 px-4">Event ID</th>
+                                    <th class="py-3 px-4">Rail Cohort</th>
+                                    <th class="py-3 px-4">Action Taken</th>
+                                    <th class="py-3 px-4">Block Hash</th>
+                                    <th class="py-3 px-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="live-feed-body" class="divide-y divide-[#1e1e24]/60 font-mono text-slate-300">
+                            <tbody id="live-feed-body" class="divide-y divide-slate-100 text-slate-700 text-sm">
                                 <!-- Dynamic rows -->
                             </tbody>
                         </table>
                     </div>
                 </div>
                 
-                <!-- Right Panel: Rail Chart with Scope Toggle & Center Action Overlay -->
-                <div class="bg-[#0e0e10] rounded-xl flex flex-col border border-[#1e1e24] shadow-lg shadow-teal-950/10">
-                    <div class="px-5 py-3 border-b border-[#1e1e24] bg-[#050505]/80 flex justify-between items-center">
-                        <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-white">GMV Rupee Volume (₹ Share)</h2>
-                        <div class="flex items-center space-x-1 bg-[#09090b] p-1 rounded-lg border border-[#1e1e24] text-[10px] font-mono">
-                            <button id="scope-live-btn" onclick="setChartScope('live')" class="px-2.5 py-0.5 rounded-md font-bold transition-all bg-teal-500/20 text-teal-300 border border-teal-500/40">Live Session</button>
-                            <button id="scope-all-btn" onclick="setChartScope('all_time')" class="px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white transition-all border border-transparent">All-Time</button>
+                <!-- Right Panel: Rail Chart and Routing Diagram -->
+                <div class="flex flex-col gap-6">
+                    <!-- Chart Section -->
+                    <div class="bg-white rounded-xl flex flex-col border border-slate-200/80 shadow-sm">
+                        <div class="px-5 py-3 border-b border-slate-200/80 bg-slate-50/80 flex justify-between items-center">
+                            <h2 class="text-sm font-semibold text-slate-900">GMV Rupee Volume</h2>
+                            <div class="flex items-center bg-slate-100 p-1 rounded-md border border-slate-200 text-[11px] font-medium">
+                                <button id="scope-live-btn" onclick="setChartScope('live')" class="px-3 py-1 rounded-md bg-white text-slate-900 shadow-sm transition-all border border-slate-200">Live Session</button>
+                                <button id="scope-all-btn" onclick="setChartScope('all_time')" class="px-3 py-1 rounded-md text-slate-500 hover:text-slate-900 transition-all border border-transparent">All-Time</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="p-4 flex-1 flex items-center justify-center relative min-h-[260px]">
-                        <canvas id="railChart" width="100%" height="100%"></canvas>
-                        
-                        <!-- Center Donut Action Overlay Container -->
-                        <div id="chart-center-overlay" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-                            <span id="center-badge" class="px-2.5 py-1 rounded-md text-[9px] font-mono font-bold uppercase transition-all duration-300 bg-[#050505]/80 text-teal-300 border border-teal-500/40">
-                                <span id="center-text">80.2%</span>
-                            </span>
-                            <span id="center-subtext" class="text-[9px] font-mono text-slate-400 mt-1 font-bold tracking-wider">RECOVERY HEALTH</span>
+                        <div class="p-4 flex-1 flex items-center justify-center relative min-h-[480px]">
+                            <canvas id="railChart" width="100%" height="100%"></canvas>
+                            
+                            <!-- Center Donut Action Overlay Container -->
+                            <div id="chart-center-overlay" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
+                                <span id="center-badge" class="px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-300 bg-white/80 text-slate-900 border border-slate-200">
+                                    <span id="center-text">80.2%</span>
+                                </span>
+                                <span id="center-subtext" class="text-[11px] font-sans text-slate-500 mt-1 font-medium uppercase tracking-wider">Recovery Health</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -209,86 +281,96 @@
         <div id="tab-simulator" class="tab-content">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-1 space-y-4">
-                    <div class="bg-[#0e0e10] p-5 rounded-xl border border-[#1e1e24] shadow-lg shadow-teal-950/10">
-                        <h2 class="text-xs font-mono font-bold uppercase tracking-wider border-b border-[#1e1e24] pb-2.5 mb-4 text-white">Quick Presets</h2>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm">
+                        <h2 class="text-sm font-semibold border-b border-slate-200/80 pb-2.5 mb-4 text-slate-900">Quick Presets</h2>
                         <div class="space-y-2">
-                            <button onclick="loadPreset('503')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">1. Bank Outage (503 -> Silent Retry)</button>
-                            <button onclick="loadPreset('cart_drop')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">2. Daytime Cart Drop (Dynamic Link)</button>
-                            <button onclick="loadPreset('high_value')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">3. High-Value Drop (> ₹15k Gate)</button>
-                            <button onclick="loadPreset('mandate')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">4. Expired Mandate (UPI Migration)</button>
-                            <button onclick="loadPreset('b2b')" class="w-full text-left px-3.5 py-2.5 text-xs bg-[#050505] hover:bg-teal-950/20 border border-[#1e1e24] hover:border-teal-500/40 rounded-lg transition font-mono text-slate-300 hover:text-white">5. B2B Overdue (2% Discount / PTP)</button>
+                            <button onclick="loadPreset('503')" class="w-full text-left bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-white rounded-md p-3 text-xs text-slate-600 hover:text-slate-900 transition font-sans shadow-sm">1. Bank Outage (503 -> Silent Retry)</button>
+                            <button onclick="loadPreset('cart_drop')" class="w-full text-left bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-white rounded-md p-3 text-xs text-slate-600 hover:text-slate-900 transition font-sans shadow-sm">2. Daytime Cart Drop (Dynamic Link)</button>
+                            <button onclick="loadPreset('high_value')" class="w-full text-left bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-white rounded-md p-3 text-xs text-slate-600 hover:text-slate-900 transition font-sans shadow-sm">3. High-Value Drop (> ₹15k Gate)</button>
+                            <button onclick="loadPreset('mandate')" class="w-full text-left bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-white rounded-md p-3 text-xs text-slate-600 hover:text-slate-900 transition font-sans shadow-sm">4. Expired Mandate (UPI Migration)</button>
+                            <button onclick="loadPreset('b2b')" class="w-full text-left bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-white rounded-md p-3 text-xs text-slate-600 hover:text-slate-900 transition font-sans shadow-sm">5. B2B Overdue (2% Discount / PTP)</button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="lg:col-span-2 bg-[#0e0e10] p-6 rounded-xl relative overflow-hidden border border-[#1e1e24] shadow-lg shadow-teal-950/10">
-                    <h2 class="text-xs font-mono font-bold uppercase tracking-wider border-b border-[#1e1e24] pb-2.5 mb-5 text-white">Inject Custom Event Payload</h2>
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl relative overflow-hidden border border-slate-200/80 shadow-sm">
+                    <!-- Pipeline Stepper -->
+                    <div class="mb-8 relative">
+                        <div class="absolute top-4 left-8 right-8 h-[2px] bg-slate-200 z-0"></div>
+                        <div class="relative z-10 flex justify-between items-start w-full px-2" id="sim-stepper">
+                            <div class="flex flex-col items-center gap-2 w-24 text-center">
+                                <div id="stepper-circle-1" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">1</div>
+                                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider leading-tight">Ingest Payload</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 w-24 text-center">
+                                <div id="stepper-circle-2" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">2</div>
+                                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider leading-tight">Guardian Gateways</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 w-24 text-center">
+                                <div id="stepper-circle-3" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">3</div>
+                                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider leading-tight">Gemini AI Triage</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 w-24 text-center">
+                                <div id="stepper-circle-4" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">4</div>
+                                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider leading-tight">Ledger Commit</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="text-sm font-semibold border-b border-slate-200/80 pb-2.5 mb-5 text-slate-900">Inject Custom Event Payload</h2>
                     
                     <form id="sim-form" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Event ID</label>
-                                <input type="text" id="sim-id" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Event ID</label>
+                                <input type="text" id="sim-id" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-400 shadow-sm" required>
                             </div>
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Customer Phone</label>
-                                <input type="text" id="sim-phone" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Customer Phone</label>
+                                <input type="text" id="sim-phone" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-400 shadow-sm" required>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Error Code</label>
-                                <input type="text" id="sim-error" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Error Code</label>
+                                <input type="text" id="sim-error" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-400 shadow-sm" required>
                             </div>
                             <div>
-                                <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Amount (INR)</label>
-                                <input type="number" id="sim-amount" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" step="0.01" required>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Amount (INR)</label>
+                                <input type="number" id="sim-amount" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-400 shadow-sm" step="0.01" required>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[10px] uppercase font-mono text-slate-400 mb-1">Error Description</label>
-                            <input type="text" id="sim-desc" class="w-full bg-[#050505] border border-[#1e1e24] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-teal-500/60" required>
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Error Description</label>
+                            <input type="text" id="sim-desc" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-400 shadow-sm" required>
                         </div>
                         
-                        <div class="pt-4 border-t border-[#1e1e24] flex justify-end items-center">
-                            <span id="sim-status" class="text-xs font-mono mr-4 text-slate-400"></span>
-                            <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 text-white text-xs font-mono font-bold rounded-lg shadow-lg shadow-teal-950/40 border border-teal-400/30 transition-all flex items-center">
+                        <div class="pt-4 border-t border-slate-200/80 flex justify-end items-center">
+                            <span id="sim-status" class="text-xs font-mono mr-4 text-slate-500"></span>
+                            <button type="submit" id="sim-submit-btn" class="px-4 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-sans font-medium rounded-md shadow-sm transition-all flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                 Execute Recovery Pipeline
                             </button>
                         </div>
                     </form>
-                    
-                    <!-- Execution Overlay -->
-                    <div id="sim-overlay" class="absolute inset-0 bg-[#050505]/95 backdrop-blur-md z-10 hidden flex-col items-center justify-center border border-teal-500/40 rounded-xl">
-                        <div class="w-64">
-                            <h3 class="text-xs font-mono uppercase font-bold text-teal-400 mb-4 text-center">Pipeline Executing...</h3>
-                            <div class="space-y-2 text-xs font-mono text-slate-400" id="sim-steps">
-                                <p id="step-1" class="opacity-30">▶ AI Triage Diagnosis...</p>
-                                <p id="step-2" class="opacity-30">▶ Policy Guardians Check...</p>
-                                <p id="step-3" class="opacity-30">▶ Routing Action...</p>
-                                <p id="step-4" class="opacity-30">▶ Appending Ledger Block...</p>
-                            </div>
-                            <button onclick="closeSimOverlay()" class="mt-6 w-full px-4 py-2 bg-[#0e0e10] hover:bg-teal-950/30 text-white text-xs font-mono rounded-lg border border-[#1e1e24] hidden" id="sim-close-btn">Return to Sandbox</button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
 
         <!-- Tab 3: Cryptographic Audit Explorer -->
         <div id="tab-audit" class="tab-content h-full">
-            <div class="bg-[#0e0e10] rounded-xl h-full flex flex-col border border-[#1e1e24] shadow-lg shadow-teal-950/10">
-                <div class="px-5 py-3.5 border-b border-[#1e1e24] flex justify-between items-center bg-[#050505]/80">
-                    <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-white">Raw Ledger Block Explorer</h2>
+            <div class="bg-white rounded-xl h-full flex flex-col border border-slate-200/80 shadow-sm">
+                <div class="px-5 py-3.5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/80">
+                    <h2 class="text-sm font-semibold text-slate-900">Raw Ledger Block Explorer</h2>
                     <div class="flex space-x-3">
-                        <button onclick="simulateHack()" class="px-3.5 py-1.5 bg-rose-950/60 hover:bg-rose-900/80 text-xs font-mono text-rose-400 rounded-lg border border-rose-800/60 transition shadow-sm">
+                        <button onclick="simulateHack()" class="px-4 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-md text-xs font-medium transition shadow-sm">
                             <span class="mr-1">⚠️</span> Simulate Hack
                         </button>
-                        <button onclick="rollbackChain()" id="btn-rollback" class="px-3.5 py-1.5 bg-amber-950/60 hover:bg-amber-900/80 text-xs font-mono text-amber-300 rounded-lg border border-amber-800/60 transition hidden shadow-sm">
+                        <button onclick="rollbackChain()" id="btn-rollback" class="px-4 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-md text-xs font-medium transition shadow-sm hidden">
                             <span class="mr-1">🛡️</span> Execute Safe Rollback
                         </button>
-                        <button onclick="verifyChainUI()" class="px-3.5 py-1.5 bg-[#050505] hover:bg-teal-950/30 text-xs font-mono text-teal-200 rounded-lg border border-[#1e1e24] transition">
+                        <button onclick="verifyChainUI()" class="px-4 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-md text-xs font-medium transition shadow-sm">
                             Verify Chain Integrity
                         </button>
                     </div>
@@ -308,58 +390,157 @@
                 <p class="text-xs font-mono text-slate-400">Showing contextual guardrail enforcement for the most recently processed event.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-trai">
-                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-trai"></span>TRAI Quiet Hours</h3>
+                <div class="bg-[#0E1117] p-6 rounded-xl transition-all duration-300 border border-white/[0.08] shadow-sm hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.6)] hover:border-white/[0.2] cursor-default" id="panel-trai">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-sm font-semibold text-white">TRAI Quiet Hours</h3>
+                        <div class="text-[11px] font-semibold bg-[#141824] px-2 py-1 rounded-md border border-white/[0.05]">
+                            <span class="text-emerald-400" id="status-trai">ENFORCING</span>
+                        </div>
+                    </div>
                     <p class="text-xs text-slate-400 mb-3">Prevents automated SMS/WhatsApp communications between 9:00 PM and 9:00 AM IST to comply with telecom regulations.</p>
-                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-trai">ENFORCING</span> | Range: 21:00-09:00 IST</div>
+                    <div class="text-[11px] font-mono bg-[#141824] p-2.5 rounded-lg border border-white/[0.05] text-slate-400">Status: <span class="text-emerald-400 font-bold font-sans" id="status-trai-inner">ENFORCING</span> | Range: 21:00-09:00 IST</div>
                 </div>
-                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-hv">
-                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-hv"></span>High-Value Approval Gate</h3>
+                <div class="bg-[#0E1117] p-6 rounded-xl transition-all duration-300 border border-white/[0.08] shadow-sm hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.6)] hover:border-white/[0.2] cursor-default" id="panel-hv">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-sm font-semibold text-white">High-Value Approval Gate</h3>
+                        <div class="text-[11px] font-semibold bg-[#141824] px-2 py-1 rounded-md border border-white/[0.05]">
+                            <span class="text-emerald-400" id="status-hv">ENFORCING</span>
+                        </div>
+                    </div>
                     <p class="text-xs text-slate-400 mb-3">Automatically halts fully autonomous recovery actions for transactions exceeding ₹15,000, flagging them for human manager approval.</p>
-                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-hv">ENFORCING</span> | Limit: > ₹15,000.00</div>
+                    <div class="text-[11px] font-mono bg-[#141824] p-2.5 rounded-lg border border-white/[0.05] text-slate-400">Status: <span class="text-emerald-400 font-bold font-sans" id="status-hv-inner">ENFORCING</span> | Limit: > ₹15,000.00</div>
                 </div>
-                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-rbi">
-                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-rbi"></span>RBI Pre-Debit Mandate</h3>
+                <div class="bg-[#0E1117] p-6 rounded-xl transition-all duration-300 border border-white/[0.08] shadow-sm hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.6)] hover:border-white/[0.2] cursor-default" id="panel-rbi">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-sm font-semibold text-white">RBI Pre-Debit Mandate</h3>
+                        <div class="text-[11px] font-semibold bg-[#141824] px-2 py-1 rounded-md border border-white/[0.05]">
+                            <span class="text-emerald-400" id="status-rbi">ENFORCING</span>
+                        </div>
+                    </div>
                     <p class="text-xs text-slate-400 mb-3">Enforces the 24-hour pre-debit notification requirement for recurring auto-pays. Blocks recovery if notice was not dispatched on time.</p>
-                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-rbi">ENFORCING</span> | Rule: >= 24h</div>
+                    <div class="text-[11px] font-mono bg-[#141824] p-2.5 rounded-lg border border-white/[0.05] text-slate-400">Status: <span class="text-emerald-400 font-bold font-sans" id="status-rbi-inner">ENFORCING</span> | Rule: >= 24h</div>
                 </div>
-                <div class="bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10" id="panel-cap">
-                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4 flex items-center"><span class="w-2 h-2 bg-teal-400 rounded-full mr-2" id="dot-cap"></span>2-Touch Harassment Cap</h3>
+                <div class="bg-[#0E1117] p-6 rounded-xl transition-all duration-300 border border-white/[0.08] shadow-sm hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,0,0,0.6)] hover:border-white/[0.2] cursor-default" id="panel-cap">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-sm font-semibold text-white">2-Touch Harassment Cap</h3>
+                        <div class="text-[11px] font-semibold bg-[#141824] px-2 py-1 rounded-md border border-white/[0.05]">
+                            <span class="text-emerald-400" id="status-cap">ENFORCING</span>
+                        </div>
+                    </div>
                     <p class="text-xs text-slate-400 mb-3">Hard limits maximum automated outreach attempts per customer per week to prevent consumer harassment and spam violations.</p>
-                    <div class="text-[10px] font-mono bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24] text-slate-400">Status: <span class="text-teal-400 font-bold" id="status-cap">ENFORCING</span> | Limit: <= 2</div>
+                    <div class="text-[11px] font-mono bg-[#141824] p-2.5 rounded-lg border border-white/[0.05] text-slate-400">Status: <span class="text-emerald-400 font-bold font-sans" id="status-cap-inner">ENFORCING</span> | Limit: <= 2</div>
                 </div>
             </div>
         </div>
 
     </div>
 
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 bg-white/60 backdrop-blur-md py-4 px-8 text-center relative z-20">
+        <div class="flex justify-center items-center space-x-8 text-[11px] text-slate-500 font-bold uppercase tracking-wider">
+            <div class="footer-link cursor-pointer text-slate-600 hover:text-emerald-500 transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Documentation
+            </div>
+            <div class="footer-link cursor-pointer text-slate-600 hover:text-emerald-500 transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Security Audit
+            </div>
+            <div class="footer-link cursor-pointer text-slate-600 hover:text-emerald-500 transition-colors flex items-center">
+                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></div>
+                Systems Operational
+            </div>
+            <div class="footer-link cursor-pointer text-slate-600 hover:text-emerald-500 transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                Support Hub
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay for Simulation Loading -->
+    <div id="sim-overlay" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8 flex flex-col items-center">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div>
+                <h3 class="text-sm font-semibold text-slate-900 font-mono">Executing Recovery Pipeline...</h3>
+            </div>
+            <div class="w-full space-y-3 mb-6" id="sim-steps">
+                <div id="sim-step-1" class="flex items-center space-x-3 opacity-30 transition-all duration-300">
+                    <div id="stepper-circle-1" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">1</div>
+                    <span class="text-xs font-mono text-slate-600">▶ Ingesting event payload into state machine</span>
+                </div>
+                <div id="sim-step-2" class="flex items-center space-x-3 opacity-30 transition-all duration-300">
+                    <div id="stepper-circle-2" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">2</div>
+                    <span class="text-xs font-mono text-slate-600">▶ Running Policy Guardian checks (TRAI, RBI, HV)</span>
+                </div>
+                <div id="sim-step-3" class="flex items-center space-x-3 opacity-30 transition-all duration-300">
+                    <div id="stepper-circle-3" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">3</div>
+                    <span class="text-xs font-mono text-slate-600" id="sim-step-3-text">▶ Gemini AI triaging cohort classification</span>
+                </div>
+                <div id="sim-step-4" class="flex items-center space-x-3 opacity-30 transition-all duration-300">
+                    <div id="stepper-circle-4" class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300">4</div>
+                    <span class="text-xs font-mono text-slate-600" id="sim-step-4-text">▶ Committing to cryptographic audit ledger</span>
+                </div>
+            </div>
+            <p id="sim-status-text" class="text-xs font-mono text-slate-500 mb-4">Initializing...</p>
+            <button id="sim-close-btn" onclick="closeSimOverlay()" class="hidden px-5 py-2 bg-[#0F172A] text-white text-xs font-medium rounded-lg transition-all hover:bg-slate-700">Close</button>
+        </div>
+    </div>
+
     <!-- Right Drawer: Inspect Payload -->
-    <div id="payload-drawer" class="fixed inset-y-0 right-0 w-96 bg-[#0e0e10] border-l border-[#1e1e24] shadow-2xl drawer z-50 flex flex-col">
-        <div class="px-5 py-4 border-b border-[#1e1e24] flex justify-between items-center bg-[#050505]">
-            <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white">Diagnostic Inspection</h3>
-            <button onclick="closeDrawer()" class="text-slate-400 hover:text-white">
+    <div id="payload-drawer" class="fixed inset-y-0 right-0 w-96 bg-white border-l border-slate-200 shadow-2xl drawer z-50 flex flex-col">
+        <div class="px-5 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+            <h3 class="text-sm font-semibold text-slate-900">Diagnostic Inspection</h3>
+            <button onclick="closeDrawer()" class="text-slate-400 hover:text-slate-900 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
         <div class="flex-1 overflow-auto p-5 space-y-6">
+            <div class="flex justify-between items-end border-b border-slate-200 pb-3">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Event Reference</p>
+                    <p id="drawer-event-id" class="text-sm font-mono text-slate-900 font-bold"></p>
+                </div>
+                <button onclick="navigator.clipboard.writeText(document.getElementById('drawer-hash').innerText)" class="px-2 py-1 bg-white border border-slate-200 shadow-sm rounded text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition flex items-center">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Copy Hash
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-2">
+                <div class="bg-slate-50 border border-slate-200 rounded p-2.5">
+                    <p class="text-[10px] text-slate-500 uppercase font-semibold mb-1">Amount (₹)</p>
+                    <p id="drawer-amount" class="text-xs font-mono font-bold text-slate-900">0.00</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded p-2.5">
+                    <p class="text-[10px] text-slate-500 uppercase font-semibold mb-1">Milestone</p>
+                    <p id="drawer-milestone" class="text-xs font-mono font-bold text-slate-900">0.00</p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded p-2.5">
+                    <p class="text-[10px] text-slate-500 uppercase font-semibold mb-1">Action</p>
+                    <p id="drawer-action" class="text-xs font-sans font-bold text-slate-900 truncate">UNKNOWN</p>
+                </div>
+            </div>
+            
             <div>
-                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">Event Reference</p>
-                <p id="drawer-event-id" class="text-xs font-mono text-white font-bold"></p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Policy Guardrails</p>
+                <div class="flex flex-wrap gap-2" id="drawer-guardrails">
+                    <!-- Badges populated by JS -->
+                </div>
             </div>
             
             <div id="drawer-copy-section" class="hidden">
-                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">AI Generated Copy</p>
-                <div class="bg-[#050505] border border-[#1e1e24] p-3 rounded-lg text-xs text-slate-300 font-sans italic" id="drawer-copy"></div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">AI Generated Copy</p>
+                <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs text-slate-700 font-sans italic" id="drawer-copy"></div>
             </div>
             
             <div>
-                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">Raw JSON Payload</p>
-                <pre id="drawer-json" class="bg-[#050505] border border-[#1e1e24] p-3 rounded-lg text-[10px] font-mono text-teal-300 overflow-x-auto whitespace-pre-wrap"></pre>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Raw JSON Payload</p>
+                <pre id="drawer-json" class="bg-slate-950 text-emerald-400 p-4 rounded-lg text-xs font-mono overflow-x-auto border border-slate-800 shadow-inner"></pre>
             </div>
             
-            <div>
-                <p class="text-[10px] uppercase font-mono text-slate-400 mb-1">Ledger Hash Signature</p>
-                <p id="drawer-hash" class="text-[9px] font-mono text-slate-400 break-all bg-[#050505] p-2.5 rounded-lg border border-[#1e1e24]"></p>
+            <div class="hidden">
+                <p id="drawer-hash"></p>
             </div>
         </div>
     </div>
@@ -380,11 +561,11 @@
 
         function switchTab(targetId) {
             document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('border-teal-400', 'text-teal-300', 'shadow-[0_4px_12px_-2px_rgba(20,184,166,0.3)]');
-                b.classList.add('border-transparent', 'text-slate-400');
+                b.classList.remove('border-slate-900', 'text-slate-900', 'shadow-none');
+                b.classList.add('border-transparent', 'text-slate-500');
                 if(b.dataset.target === targetId) {
-                    b.classList.remove('border-transparent', 'text-slate-400');
-                    b.classList.add('border-teal-400', 'text-teal-300', 'shadow-[0_4px_12px_-2px_rgba(20,184,166,0.3)]');
+                    b.classList.remove('border-transparent', 'text-slate-500');
+                    b.classList.add('border-slate-900', 'text-slate-900', 'shadow-none');
                 }
             });
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -410,11 +591,11 @@
             const allBtn = document.getElementById('scope-all-btn');
             
             if (scope === 'live') {
-                liveBtn.className = 'px-2.5 py-0.5 rounded-md font-bold transition-all bg-teal-500/20 text-teal-300 border border-teal-500/40';
-                allBtn.className = 'px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white transition-all border border-transparent';
+                liveBtn.className = 'px-3 py-1 rounded-md bg-[#23262D] text-white shadow-sm transition-all border border-transparent';
+                allBtn.className = 'px-3 py-1 rounded-md text-slate-400 hover:text-white transition-all border border-transparent';
             } else {
-                allBtn.className = 'px-2.5 py-0.5 rounded-md font-bold transition-all bg-teal-500/20 text-teal-300 border border-teal-500/40';
-                liveBtn.className = 'px-2.5 py-0.5 rounded-md text-slate-400 hover:text-white transition-all border border-transparent';
+                allBtn.className = 'px-3 py-1 rounded-md bg-[#23262D] text-white shadow-sm transition-all border border-transparent';
+                liveBtn.className = 'px-3 py-1 rounded-md text-slate-400 hover:text-white transition-all border border-transparent';
             }
             
             if (currentData) {
@@ -432,33 +613,50 @@
             clearTimeout(pulseTimer);
             
             let label = "+1 EVENT ROUTED";
-            let bgClasses = "bg-teal-500/20 text-teal-300 border-teal-500/60 shadow-[0_0_15px_rgba(20,184,166,0.4)]";
+            let bgClasses = "bg-slate-100 text-slate-700 border-slate-300 shadow-sm";
+            let activeNodeId = null;
             
             if (action === 'REQUIRES_HUMAN_APPROVAL' || action.includes('BLOCKED_BY_GUARDIAN')) {
                 label = "+1 HIGH-VALUE HOLD";
-                bgClasses = "bg-rose-500/20 text-rose-400 border-rose-500/60 shadow-[0_0_15px_rgba(244,63,94,0.4)] animate-pulse";
+                bgClasses = "bg-rose-50 text-rose-600 border-rose-200 shadow-sm animate-pulse";
+                activeNodeId = "rail-node-escrow";
             } else if (action === 'DYNAMIC_LINK_SENT' || cohort === 'CONSUMER_CHECKOUT_DROP') {
                 label = "+1 DYNAMIC LINK";
-                bgClasses = "bg-emerald-500/20 text-emerald-300 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.4)] animate-pulse";
+                bgClasses = "bg-emerald-50 text-emerald-600 border-emerald-200 shadow-sm animate-pulse";
+                activeNodeId = "rail-node-link";
             } else if (action === 'SILENT_RETRY_QUEUED' || cohort === 'TECHNICAL_DOWNTIME') {
                 label = "+1 SILENT RETRY";
-                bgClasses = "bg-blue-500/20 text-blue-300 border-blue-500/60 shadow-[0_0_15px_rgba(59,130,246,0.4)] animate-pulse";
+                bgClasses = "bg-blue-50 text-blue-600 border-blue-200 shadow-sm animate-pulse";
+                activeNodeId = "rail-node-retry";
             } else if (action.includes('AUTOPAY') || cohort === 'MANDATE_DEGRADATION') {
                 label = "+1 MANDATE MIGRATION";
-                bgClasses = "bg-purple-500/20 text-purple-300 border-purple-500/60 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse";
+                bgClasses = "bg-purple-50 text-purple-600 border-purple-200 shadow-sm animate-pulse";
+                activeNodeId = "rail-node-mandate";
             } else if (cohort === 'B2B_RECEIVABLE_OVERDUE' || action.includes('B2B')) {
                 label = "+1 B2B DISCOUNT";
-                bgClasses = "bg-amber-500/20 text-amber-300 border-amber-500/60 shadow-[0_0_15px_rgba(245,158,11,0.4)] animate-pulse";
+                bgClasses = "bg-amber-50 text-amber-600 border-amber-200 shadow-sm animate-pulse";
+                activeNodeId = "rail-node-link";
             }
             
-            badge.className = `px-2.5 py-1 rounded-md text-[9px] font-mono font-bold uppercase transition-all duration-300 border ${bgClasses}`;
+            badge.className = `px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-300 border ${bgClasses}`;
             text.innerText = label;
             subtext.innerText = "IMPACT DETECTED";
-            subtext.className = "text-[9px] font-mono text-teal-400 mt-1 font-bold animate-pulse";
+            subtext.className = "text-[11px] font-sans text-emerald-600 mt-1 font-bold animate-pulse tracking-wider";
+            
+            // Animate routing diagram node
+            if (activeNodeId) {
+                const node = document.getElementById(activeNodeId);
+                if (node) {
+                    node.classList.add('ring-2', 'ring-emerald-400', 'bg-white', 'shadow-md', 'scale-105', 'z-20');
+                    setTimeout(() => {
+                        node.classList.remove('ring-2', 'ring-emerald-400', 'bg-white', 'shadow-md', 'scale-105', 'z-20');
+                    }, 2500);
+                }
+            }
             
             pulseTimer = setTimeout(() => {
                 delete subtext.dataset.pulsing;
-                badge.className = "px-2.5 py-1 rounded-md text-[9px] font-mono font-bold uppercase transition-all duration-300 bg-[#050505]/80 text-teal-300 border border-teal-500/40";
+                badge.className = "px-2.5 py-1 rounded-md text-[11px] font-medium transition-all duration-300 bg-white/80 text-slate-900 border border-slate-200";
                 if (chartScope === 'live') {
                     const totalLive = sessionEvents.reduce((acc, evt) => acc + (evt.amount_inr || 0), 0);
                     text.innerText = totalLive > 0 ? `₹${totalLive.toLocaleString('en-IN')}` : "STANDBY";
@@ -467,7 +665,7 @@
                     text.innerText = `${currentData ? currentData.recovery_rate_pct.toFixed(1) : '80.2'}%`;
                     subtext.innerText = "RECOVERY HEALTH";
                 }
-                subtext.className = "text-[9px] font-mono text-slate-400 mt-1 font-bold tracking-wider";
+                subtext.className = "text-[11px] font-sans text-slate-500 mt-1 font-medium uppercase tracking-wider";
             }, 2500);
         }
 
@@ -563,7 +761,7 @@
                         legend: { 
                             position: 'bottom', 
                             labels: { 
-                                color: '#F8FAFC', 
+                                color: '#475569', 
                                 font: { family: 'JetBrains Mono', size: 10, weight: 'bold' },
                                 generateLabels: function(chart) {
                                     const data = chart.data;
@@ -579,7 +777,7 @@
                                                 fillStyle: fill,
                                                 strokeStyle: fill,
                                                 lineWidth: 0,
-                                                fontColor: '#F8FAFC',
+                                                fontColor: '#475569',
                                                 hidden: isNaN(dataset.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
                                                 index: i
                                             };
@@ -609,11 +807,12 @@
         let currentData = null;
         
         const getBadgeColor = (action) => {
-            if (!action) return 'text-slate-400 border-slate-700/50 bg-[#050505]';
-            if (action.includes('HALT') || action.includes('BLOCKED')) return 'text-rose-400 border-rose-500/40 bg-rose-500/10 shadow-[0_0_10px_rgba(244,63,94,0.2)]';
-            if (action.includes('DEFERRED')) return 'text-amber-300 border-amber-500/40 bg-amber-500/10';
-            if (action.includes('SENT') || action.includes('QUEUED') || action.includes('SUCCESS') || action.includes('CREATED')) return 'text-teal-300 border-teal-500/40 bg-teal-500/10 shadow-[0_0_10px_rgba(20,184,166,0.2)]';
-            return 'text-slate-400 border-slate-700/50 bg-[#050505]';
+            if (!action) return 'bg-slate-50 text-slate-700 border-slate-200 rounded-full font-medium border text-[11px] px-2.5 py-0.5';
+            if (action.includes('HALT') || action.includes('BLOCKED')) return 'bg-rose-50 text-rose-700 border-rose-200 rounded-full font-medium border text-[11px] px-2.5 py-0.5';
+            if (action.includes('DEFERRED') || action.includes('REQUIRES')) return 'bg-amber-100 text-amber-800 border-amber-300 rounded-full font-medium border text-[11px] px-2.5 py-0.5 shadow-sm';
+            if (action.includes('RETRY') || action.includes('QUEUED')) return 'bg-blue-50 text-blue-700 border-blue-200 rounded-full font-medium border text-[11px] px-2.5 py-0.5';
+            if (action.includes('SENT') || action.includes('SUCCESS') || action.includes('CREATED') || action.includes('RESOLVED')) return 'bg-emerald-50 text-emerald-700 border-emerald-200 rounded-full font-medium border text-[11px] px-2.5 py-0.5';
+            return 'bg-slate-50 text-slate-700 border-slate-200 rounded-full font-medium border text-[11px] px-2.5 py-0.5';
         };
 
         async function fetchMetrics() {
@@ -637,21 +836,19 @@
                     document.getElementById('kpi-blocks').innerText = data.total_events_processed;
                 }
                 
-                // Ledger Badge (Mint Green Pulse)
+                // Ledger Badge
                 const badge = document.getElementById('ledger-badge');
                 const dot = document.getElementById('ledger-dot');
                 const text = document.getElementById('ledger-text');
                 if (badge && dot && text && data.ledger_status) {
                     if (data.ledger_status.is_valid) {
-                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-teal-500/10 border border-teal-500/30 shadow-[0_0_12px_rgba(20,184,166,0.2)] transition-colors duration-300';
-                        dot.className = 'w-2 h-2 rounded-full bg-teal-400 animate-pulse';
+                        badge.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 shadow-sm transition-colors duration-300 text-xs font-sans';
+                        dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500';
                         text.innerText = 'CHAIN VERIFIED';
-                        text.className = 'text-xs font-mono font-bold text-teal-300';
                     } else {
-                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.2)] transition-colors duration-300';
-                        dot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-pulse';
+                        badge.className = 'flex items-center space-x-2 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-full px-3 py-1.5 font-sans transition-colors duration-300 shadow-sm';
+                        dot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500';
                         text.innerText = 'TAMPER DETECTED';
-                        text.className = 'text-xs font-mono font-bold text-rose-400';
                     }
                 }
                 
@@ -689,25 +886,21 @@
         
         function updateGuardrailUI(id, status) {
             const panel = document.getElementById(`panel-${id}`);
-            const dot = document.getElementById(`dot-${id}`);
             const text = document.getElementById(`status-${id}`);
-            if(!panel || !dot || !text) return;
+            if(!panel || !text) return;
             
             text.innerText = status;
             
             if(status === 'ENFORCING') {
-                dot.className = 'w-2 h-2 rounded-full mr-2 bg-teal-400';
-                text.className = 'font-bold text-teal-400';
-                panel.className = 'bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] shadow-lg shadow-teal-950/10';
+                text.className = 'text-emerald-400';
+                panel.className = 'bg-[#0E1117] p-6 rounded-lg transition-colors duration-300 border border-white/[0.08] shadow-sm';
             } else if(status === 'TRIGGERED - BLOCKED') {
-                dot.className = 'w-2 h-2 rounded-full mr-2 bg-rose-500 animate-pulse';
-                text.className = 'font-bold text-rose-400';
-                panel.className = 'bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-rose-500/40 bg-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.2)]';
+                text.className = 'text-rose-400';
+                panel.className = 'bg-[#0E1117] p-6 rounded-lg transition-colors duration-300 border border-rose-900/50 bg-rose-950/20';
             } else {
                 // SKIPPED
-                dot.className = 'w-2 h-2 rounded-full mr-2 bg-[#1e1e24]';
-                text.className = 'font-bold text-slate-500';
-                panel.className = 'bg-[#0e0e10] p-6 rounded-xl transition-colors duration-300 border border-[#1e1e24] opacity-50';
+                text.className = 'text-slate-500';
+                panel.className = 'bg-[#0E1117] p-6 rounded-lg transition-colors duration-300 border border-white/[0.08] opacity-60';
             }
         }
 
@@ -747,23 +940,27 @@
                 // Safely convert payload to a string we can embed
                 const rawJson = event.payload_raw ? encodeURIComponent(JSON.stringify(event.payload_raw)) : '';
                 
-                // Detect link
                 let linkBtnHtml = '';
                 if(event.payload_raw && event.payload_raw.link_data && event.payload_raw.link_data.short_url) {
-                    linkBtnHtml = `<a href="${event.payload_raw.link_data.short_url}" target="_blank" class="ml-2 px-2 py-1 bg-[#050505] hover:bg-teal-900/30 text-slate-200 rounded border border-[#1e1e24] transition">Link</a>`;
+                    linkBtnHtml = `<a href="${event.payload_raw.link_data.short_url}" target="_blank" class="ml-2 px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 rounded-lg border border-slate-300 transition font-sans shadow-sm">Link</a>`;
                 }
                 
+                const formatActionStr = (str) => {
+                    if (!str) return 'PROCESSED';
+                    return str.replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                };
+                
                 const tr = `
-                <tr class="hover:bg-teal-950/20 transition-colors group">
-                    <td class="py-3 px-4 text-slate-400">${formatTime(event.timestamp)}</td>
-                    <td class="py-3 px-4 font-bold text-white">${event.event_id}</td>
-                    <td class="py-3 px-4 text-slate-300">${event.cohort || 'N/A'}</td>
+                <tr class="hover:bg-slate-50 transition-colors group">
+                    <td class="py-3 px-4 text-xs font-medium text-slate-700 font-mono">${formatTime(event.timestamp)}</td>
+                    <td class="py-3 px-4 text-slate-900 font-mono font-medium">${event.event_id}</td>
+                    <td class="py-3 px-4 text-xs font-semibold text-slate-800 font-sans">${event.cohort || 'N/A'}</td>
                     <td class="py-3 px-4">
-                        <span class="px-2.5 py-0.5 rounded text-[9px] border font-mono ${bClasses}">${event.action_taken || 'PROCESSED'}</span>
+                        <span class="${bClasses} font-sans">${formatActionStr(event.action_taken)}</span>
                     </td>
-                    <td class="py-3 px-4 text-slate-400 truncate max-w-[120px]" title="${safeHash}">${hashShort}...</td>
+                    <td class="py-3 px-4 text-slate-500 truncate max-w-[120px]" title="${safeHash}">${hashShort}...</td>
                     <td class="py-3 px-4 text-right">
-                        <button onclick="openDrawer('${event.event_id}', '${safeHash}', '${rawJson}')" class="px-2.5 py-1 bg-[#050505] hover:bg-teal-900/30 text-slate-200 rounded-lg border border-[#1e1e24] transition font-mono">Inspect</button>
+                        <button onclick="openDrawer('${event.event_id}', '${safeHash}', '${rawJson}', '${event.action_taken}')" class="px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 rounded-lg border border-slate-300 transition font-sans shadow-sm">Inspect</button>
                         ${linkBtnHtml}
                     </td>
                 </tr>
@@ -777,12 +974,29 @@
         });
 
         // --- Drawer Logic ---
-        function openDrawer(eventId, hash, encodedPayload) {
+        function openDrawer(eventId, hash, encodedPayload, actionTaken) {
             document.getElementById('drawer-event-id').innerText = eventId;
             document.getElementById('drawer-hash').innerText = hash;
             
             const payload = encodedPayload ? JSON.parse(decodeURIComponent(encodedPayload)) : {};
             document.getElementById('drawer-json').innerText = JSON.stringify(payload, null, 2);
+            
+            // Populate Micro Grid
+            document.getElementById('drawer-amount').innerText = payload.amount_inr || payload.amount || '0.00';
+            document.getElementById('drawer-milestone').innerText = payload.milestone || (payload.amount_inr || 0).toString();
+            document.getElementById('drawer-action').innerText = actionTaken ? actionTaken.replace(/_/g, ' ') : 'PROCESSED';
+            
+            // Populate Guardrails
+            const grContainer = document.getElementById('drawer-guardrails');
+            grContainer.innerHTML = '';
+            
+            const guardrails = payload.guardrails_checked || payload.guardrails || { 'TRAI': 'PASS', 'RBI': 'PASS' };
+            Object.keys(guardrails).forEach(key => {
+                const status = guardrails[key];
+                const isPass = status.includes('PASS') || status.includes('ENFORCING');
+                const badgeClass = isPass ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-rose-100 text-rose-700 border-rose-200';
+                grContainer.innerHTML += `<span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeClass}">${key}: ${status}</span>`;
+            });
             
             const copySection = document.getElementById('drawer-copy-section');
             if(payload.copy) {
@@ -809,20 +1023,25 @@
                 const isLatest = idx === 0;
                 const safeHash = event.current_hash || event.ledger_hash || event.hash || '0000000000000000';
                 let html = `
-                <div id="block-${event.event_id}" class="bg-[#0e0e10] border ${isLatest ? 'border-teal-500/60 shadow-[0_0_15px_rgba(20,184,166,0.25)]' : 'border-[#1e1e24]'} rounded-xl p-4 relative group hover:border-indigo-500/40 transition-all duration-300">
-                    ${isLatest ? '<div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-teal-400 animate-ping"></div><div class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-teal-400"></div>' : ''}
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-white font-mono uppercase">Event: ${event.event_id}</span>
-                        <span class="text-[10px] text-slate-400 font-mono">${new Date(event.timestamp).toISOString()}</span>
+                <div id="block-${event.event_id}" class="bg-gradient-to-br from-slate-100 via-white to-slate-200 border-t border-t-white border-l border-r border-slate-300 border-b-4 border-b-slate-400 shadow-[0_6px_16px_rgba(0,0,0,0.1)] rounded-xl p-5 relative transition-all duration-300 z-10 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.15)] hover:border-b-slate-500 cursor-default">
+                    ${isLatest ? '<div class="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div><div class="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-emerald-500"></div>' : ''}
+                    
+                    <div class="flex justify-between items-center border-b border-slate-300 pb-2 mb-3">
+                        <span class="text-xs font-bold text-slate-800 font-mono uppercase">BLOCK #${event.event_id.split('_').pop() || event.event_id}</span>
+                        <span class="text-[11px] text-slate-500 font-mono">${new Date(event.timestamp).toISOString()}</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <p class="text-[9px] uppercase font-mono text-slate-400 mb-1">Action Recorded</p>
-                            <p class="text-xs font-mono text-teal-300 font-bold">${event.action_taken}</p>
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Event Reference</p>
+                            <p class="text-xs font-bold text-slate-900 font-mono mb-3">${event.event_id}</p>
+                            
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Action Recorded</p>
+                            <p class="text-xs font-sans text-emerald-700 font-bold">${event.action_taken}</p>
                         </div>
                         <div>
-                            <p class="text-[9px] uppercase font-mono text-slate-400 mb-1">SHA-256 Block Hash</p>
-                            <p id="hash-${event.event_id}" class="text-[10px] font-mono text-slate-300 break-all bg-[#050505] p-1.5 rounded-lg border border-[#1e1e24] transition-colors duration-300">${safeHash}</p>
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">SHA-256 Block Hash</p>
+                            <p id="hash-${event.event_id}" class="text-xs font-mono text-slate-600 break-all bg-white p-3 rounded-lg border border-slate-200 transition-colors duration-300 h-full flex items-center shadow-inner">${safeHash}</p>
                         </div>
                     </div>
                 </div>
@@ -830,7 +1049,12 @@
                 
                 // Add chain link below every block except the last one
                 if (idx < events.length - 1) {
-                    html += `<div id="link-${event.event_id}" class="h-6 w-1 bg-gradient-to-b from-teal-500/60 to-indigo-500/60 shadow-[0_0_8px_rgba(20,184,166,0.4)] mx-auto transition-all duration-300"></div>`;
+                    html += `
+                    <div id="link-${event.event_id}" class="flex justify-center items-center transition-all duration-300 py-2 relative z-0">
+                        <svg id="link-svg-${event.event_id}" class="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        </svg>
+                    </div>`;
                 }
                 
                 container.innerHTML += html;
@@ -868,17 +1092,17 @@
         function verifyChainUI() {
             const msg = document.getElementById('chain-verify-msg');
             msg.classList.remove('hidden');
-            msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-[#0e0e10] text-slate-400 border border-[#1e1e24] animate-pulse";
+            msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-[#11141D] text-slate-400 border border-[#1E2330] animate-pulse";
             msg.innerText = "> Running cryptographic recalculation across all nodes...";
             
             fetch('/api/metrics').then(r => r.json()).then(data => {
                 currentData = data;
                 setTimeout(() => {
                     if (data.ledger_status.is_valid) {
-                        msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-teal-500/10 text-teal-300 border border-teal-500/30 shadow-[0_0_12px_rgba(20,184,166,0.2)]";
+                        msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm";
                         msg.innerText = `> SUCCESS: Evaluated ${data.ledger_status.total_records} blocks. Chain integrity is 100% valid. No tampering detected.`;
                     } else {
-                        msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.2)]";
+                        msg.className = "mb-4 text-xs font-mono px-4 py-2.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/30 shadow-none";
                         const brokenId = data.ledger_status.broken_at_event_id;
                         msg.innerText = `> ALERT: Hash mismatch detected at event ID: ${brokenId || 'UNKNOWN'}. Data integrity compromised.`;
                         
@@ -888,13 +1112,16 @@
                             const hash = document.getElementById(`hash-${brokenId}`);
                             
                             if(block) {
-                                block.className = "bg-rose-500/10 border border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.25)] rounded-xl p-4 relative group transition-all duration-300";
+                                block.className = "bg-rose-50 border-t border-t-rose-200 border-l border-r border-rose-300 border-b-4 border-b-rose-500 shadow-[0_8px_30px_rgba(225,29,72,0.3)] rounded-xl p-5 relative group transition-all duration-300 ring-4 ring-rose-500/20 scale-105 z-20 animate-pulse";
                             }
                             if(link) {
-                                link.className = "h-6 w-1 mx-auto transition-all duration-300 border-l-2 border-r-2 border-rose-500 border-dashed bg-transparent animate-pulse";
+                                const svg = document.getElementById(`link-svg-${brokenId}`);
+                                if(svg) {
+                                    svg.className = "w-6 h-6 text-rose-500 animate-pulse";
+                                }
                             }
                             if(hash) {
-                                hash.className = "text-[10px] font-bold font-mono text-rose-400 break-all bg-rose-950 p-1.5 rounded-lg border border-rose-800 transition-colors duration-300 animate-pulse";
+                                hash.className = "text-xs font-bold font-mono text-rose-400 break-all bg-rose-950 p-1.5 rounded-lg border border-rose-800 transition-colors duration-300 animate-pulse";
                                 hash.innerText = "CRITICAL: HASH MISMATCH - DATA TAMPERED";
                             }
                         }
@@ -906,15 +1133,15 @@
                     const dot = document.getElementById('ledger-dot');
                     const text = document.getElementById('ledger-text');
                     if (data.ledger_status.is_valid) {
-                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-teal-500/10 border border-teal-500/30 shadow-[0_0_12px_rgba(20,184,166,0.2)] transition-colors duration-300';
-                        dot.className = 'w-2 h-2 rounded-full bg-teal-400 animate-pulse';
+                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-teal-500/10 border border-slate-700 shadow-none transition-colors duration-300';
+                        dot.className = 'w-1.5 h-1.5 rounded-full bg-[#10B981]';
                         text.innerText = 'CHAIN VERIFIED';
-                        text.className = 'text-xs font-mono font-bold text-teal-300';
+                        text.className = '';
                     } else {
-                        badge.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-rose-500/10 border border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.2)] transition-colors duration-300';
-                        dot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-pulse';
+                        badge.className = 'flex items-center space-x-2 bg-slate-800/40 border border-slate-700/60 text-slate-400 text-xs rounded-full px-3 py-1 font-sans transition-colors duration-300';
+                        dot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500';
                         text.innerText = 'TAMPER DETECTED';
-                        text.className = 'text-xs font-mono font-bold text-rose-400';
+                        text.className = '';
                     }
                 }, 1500);
             });
@@ -949,21 +1176,39 @@
             
             // Show Overlay Animation
             const overlay = document.getElementById('sim-overlay');
+            const stepperCircles = [
+                document.getElementById('stepper-circle-1'),
+                document.getElementById('stepper-circle-2'),
+                document.getElementById('stepper-circle-3'),
+                document.getElementById('stepper-circle-4')
+            ];
             const steps = [
-                document.getElementById('step-1'),
-                document.getElementById('step-2'),
-                document.getElementById('step-3'),
-                document.getElementById('step-4')
+                document.getElementById('sim-step-1'),
+                document.getElementById('sim-step-2'),
+                document.getElementById('sim-step-3'),
+                document.getElementById('sim-step-4')
             ];
             const closeBtn = document.getElementById('sim-close-btn');
-            const statusText = document.getElementById('sim-status');
+            const statusText = document.getElementById('sim-status-text');
             
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
-            closeBtn.classList.add('hidden');
-            statusText.innerText = '';
-            steps.forEach(s => s.classList.add('opacity-30', 'text-slate-400'));
-            steps.forEach(s => s.classList.remove('text-teal-400', 'font-bold'));
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            }
+            if (closeBtn) closeBtn.classList.add('hidden');
+            if (statusText) statusText.innerText = 'Initializing...';
+            
+            steps.forEach(s => {
+                if (s) {
+                    s.classList.add('opacity-30');
+                    s.classList.remove('opacity-100');
+                }
+            });
+            stepperCircles.forEach(s => {
+                if (s) {
+                    s.className = 'w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-[11px] font-bold text-slate-400 transition-all duration-300';
+                }
+            });
             
             // API Call
             try {
@@ -981,34 +1226,52 @@
                 
                 // Animate steps
                 const delay = ms => new Promise(res => setTimeout(res, ms));
+                const activeClass = 'w-8 h-8 rounded-full bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center text-[11px] font-bold text-white transition-all duration-300 scale-110 shadow-md';
                 
                 await delay(400);
-                steps[0].classList.remove('opacity-30'); steps[0].classList.add('text-teal-400');
+                if (steps[0]) { steps[0].classList.remove('opacity-30'); steps[0].classList.add('opacity-100'); }
+                if (stepperCircles[0]) stepperCircles[0].className = activeClass;
                 
                 await delay(400);
-                steps[1].classList.remove('opacity-30'); steps[1].classList.add('text-teal-400');
+                if (steps[1]) { steps[1].classList.remove('opacity-30'); steps[1].classList.add('opacity-100'); }
+                if (stepperCircles[1]) stepperCircles[1].className = activeClass;
                 
                 await delay(400);
-                steps[2].classList.remove('opacity-30'); steps[2].classList.add('text-teal-400');
-                steps[2].innerText = `▶ Routing Action: ${data.action_taken || 'ALREADY_PROCESSED'}`;
+                if (steps[2]) {
+                    steps[2].classList.remove('opacity-30'); steps[2].classList.add('opacity-100');
+                    const t = document.getElementById('sim-step-3-text');
+                    if (t) t.innerText = `▶ Routing Action: ${data.action_taken || 'ALREADY_PROCESSED'}`;
+                }
+                if (stepperCircles[2]) stepperCircles[2].className = activeClass;
                 
                 await delay(400);
-                steps[3].classList.remove('opacity-30'); steps[3].classList.add('text-teal-400', 'font-bold');
-                steps[3].innerText = `✓ Action Complete: ${data.action_taken || 'SUCCESS'}`;
+                if (steps[3]) {
+                    steps[3].classList.remove('opacity-30'); steps[3].classList.add('opacity-100');
+                    const t = document.getElementById('sim-step-4-text');
+                    if (t) t.innerText = `✓ Action Complete: ${data.action_taken || 'SUCCESS'}`;
+                }
+                if (stepperCircles[3]) stepperCircles[3].className = activeClass;
                 
-                closeBtn.classList.remove('hidden');
+                if (statusText) statusText.innerText = 'Pipeline complete!';
+                if (closeBtn) closeBtn.classList.remove('hidden');
                 
                 // Refresh data instantly & trigger center donut pulse animation
                 sessionEvents.unshift(data);
                 fetchMetrics();
-                triggerCenterPulse(data.action_taken || '', data.cohort || '');
+                if (typeof triggerCenterPulse === 'function') {
+                    triggerCenterPulse(data.action_taken || '', data.cohort || '');
+                }
                 
             } catch (err) {
                 console.error(err);
-                statusText.innerText = 'Error executing pipeline';
-                statusText.classList.add('text-rose-400');
-                overlay.classList.add('hidden');
-                overlay.classList.remove('flex');
+                if (statusText) {
+                    statusText.innerText = 'Error executing pipeline';
+                    statusText.classList.add('text-rose-400');
+                }
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                }
             }
         });
         

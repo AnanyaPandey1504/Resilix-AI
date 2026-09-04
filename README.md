@@ -1,133 +1,217 @@
-# Resilix AI // Autonomous Revenue Resilience
+# Resilix AI — AI-Powered Revenue Recovery Engine
 
-![Build Status](https://img.shields.io/badge/Build-Passing-emerald?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-zinc?style=for-the-badge)
-
-Resilix AI is a production-grade, AI-driven FinTech engine designed to autonomously recover failed transactions, combat cart abandonment, and rescue degrading mandates without violating stringent telecommunication and financial compliance regulations.
-
-Built for the **Razorpay AI Buildathon (Track 03)**, this engine acts as a 4-Rail State Machine powered by real-time telemetry, embedded policy guardians, and an immutable SHA-256 cryptographic audit ledger.
+> **Razorpay Buildathon 2026 · Track: AI Revenue Recovery**
+> Detect revenue at risk. Diagnose the failure. Execute a compliant, bounded recovery workflow. Prove it with an immutable audit trail.
 
 ---
 
-## ⚡ System Architecture
+## The Problem
 
-```mermaid
-graph TD
-    A[Razorpay Webhook] -->|Ingests Payload| B(X-Signature Validation)
-    B -->|Verified| C{Idempotency Check}
-    C -->|New Event| D[AI Triage & Cohort Analysis]
-    
-    D --> E[Policy Guardians Gate]
-    
-    E -->|Approved| F{4-Rail Recovery Router}
-    E -->|Blocked| Z[Cryptographic Ledger]
-    
-    F -->|Rail A| G[Silent Background Retry]
-    F -->|Rail B| H[Dynamic 1-Click Link]
-    F -->|Rail C| I[UPI Autopay Migration]
-    F -->|Rail D| J[B2B 2% Discount Incentivization]
-    
-    G --> Z
-    H --> Z
-    I --> Z
-    J --> Z
-    
-    Z --> K[(SQLite Immutable Block)]
-    K --> L[High-Density React/Vanilla UI]
+Revenue doesn't vanish in one clean step. It bleeds out slowly:
+
+- A bank server returns `503` at 2 AM — the retry never fires.
+- A user abandons checkout mid-payment — nobody follows up.
+- A UPI Autopay mandate degrades silently — the subscription dies.
+- A B2B invoice sits overdue for 30 days — no one chases it.
+- A ₹28,000 transaction triggers no escalation — it just fails.
+
+Indian fintechs lose billions annually to these failure modes. Most systems detect the failure. Almost none close the loop.
+
+**Resilix AI closes the loop — from detection to recovery to immutable proof.**
+
+---
+
+## What Resilix AI Does
+
+Resilix is an autonomous revenue recovery engine that plugs into Razorpay webhooks. When a payment event arrives, it:
+
+1. **Classifies the failure** into one of 4 revenue-loss cohorts in under 50ms
+2. **Checks compliance guardrails** (TRAI quiet hours, RBI mandate windows, harassment caps, high-value gates)
+3. **Executes the right recovery rail** automatically — retry, dynamic link, mandate migration, B2B settlement, or human escalation
+4. **Commits every action** to a cryptographic audit ledger with SHA-256 chain hashing
+5. **Shows you the money** — GMV at risk, GMV recovered, recovery rate, broken down by rail
+
+No hallucinations. No over-automation. No compliance violations. Just money recovered, provably.
+
+---
+
+## The 5 Recovery Rails
+
+| Rail | Trigger | Action |
+|------|---------|--------|
+| **Silent Retry** | Bank/gateway `503`, technical downtime | Queue for background exponential-backoff retry. Customer sees nothing. |
+| **Dynamic Payment Link** | B2C checkout drop, card failure, UPI timeout | Instant personalized Razorpay payment link via SMS/WhatsApp with Hinglish copy |
+| **UPI Autopay Migration** | Degraded or expired mandate | New UPI Autopay registration link with RBI 24hr pre-debit compliance check |
+| **B2B Discount Settlement + PTP** | Overdue invoice, B2B receivable | 2% early-settlement discount link + Promise-to-Pay date tracker with outreach suppression |
+| **High-Value Human Escalation** | Any amount > ₹15,000 | Automatic block + REQUIRES_HUMAN_APPROVAL flag. No automated outreach on large amounts. |
+
+---
+
+## Compliance Guardrails Built In
+
+Resilix is not just an automation engine — it is a **bounded** one. Every recovery action passes through four hard guardrails before execution:
+
+- **TRAI Quiet Hours** — Zero outreach between 9 PM and 9 AM IST. Deferred, not dropped.
+- **RBI Mandate Notice Window** — No UPI Autopay recovery without a minimum 24-hour pre-debit notification.
+- **Harassment Cap** — Maximum 2 automated contact attempts per customer per week. Hard stop.
+- **High-Value Gate** — Transactions above ₹15,000 are quarantined for human review. Never auto-recovered.
+
+These are not configuration flags. They are **code-enforced policy guardians** that cannot be bypassed by any recovery rail.
+
+---
+
+## Architecture
+
+```
+Razorpay Webhook / Simulation Sandbox
+            │
+            ▼
+┌─────────────────────────────┐
+│   Sub-50ms Deterministic    │
+│   Failure Triage Engine     │  ← Error code + description → Cohort classification
+│   (Zero-Hallucination FSM)  │    Paired with Gemini-authored contextual Hinglish copy
+└────────────┬────────────────┘
+             │  cohort + recommended_action
+             ▼
+┌─────────────────────────────┐
+│   Policy Guardian Layer     │  ← TRAI · RBI · Harassment Cap · High-Value Gate
+│   (Hard Compliance Checks)  │    Any BLOCK → immediate halt, logged to ledger
+└────────────┬────────────────┘
+             │  cleared
+             ▼
+┌─────────────────────────────┐
+│   Multi-Rail State Router   │  ← Routes to correct recovery rail
+│                             │    Silent Retry / Dynamic Link / Mandate /
+│                             │    B2B Settlement / Human Escalation
+└────────────┬────────────────┘
+             │  action_taken + payload
+             ▼
+┌─────────────────────────────┐
+│  Cryptographic Audit Ledger │  ← SHA-256 chained hash per block
+│  (Immutable SQLite Chain)   │    Tamper detection · Rollback · Verify Chain
+└─────────────────────────────┘
 ```
 
----
-
-## 🛤️ The 4-Rail Autonomous Recovery Matrix
-
-| Cohort Name | Trigger Error Codes | AI Recovery Action Taken |
-| :--- | :--- | :--- |
-| **Rail A: Technical Downtime** | `503`, `GATEWAY_TIMEOUT`, `BANK_ERROR` | Suppresses user notifications; quietly queues the event for a background retry to avoid panic. |
-| **Rail B: Consumer Drop-Off** | `ABORTED`, `USER_CLOSED_WINDOW` | Generates a dynamic 1-click Razorpay payment link with localized Hinglish copy. |
-| **Rail C: Mandate Degradation** | `MANDATE_DEGRADED`, `CARD_EXPIRED` | Migrates the user seamlessly to a UPI Autopay plan, verifying the 24h pre-debit notice window. |
-| **Rail D: B2B Overdue** | `INVOICE_OVERDUE` | Creates an immediate payment link with a 2% early-settlement incentive, while pausing outreach if a Promise-To-Pay (PTP) date exists. |
+> **On Triage Design:** The failure classifier is a sub-50ms deterministic finite state machine — intentionally rule-based for financial compliance. In revenue recovery, a misclassification means wrong money movement. The FSM provides zero-hallucination guarantees on cohort routing, while Gemini AI is paired separately to generate the contextual, empathetic Hinglish customer communication copy that accompanies each recovery action.
 
 ---
 
-## 🛡️ Security & Compliance Guarantees
+## Cryptographic Audit Ledger
 
-Resilix AI isn't just about recovering revenue; it's about recovering it legally and safely.
+Every state transition — including guardrail blocks, deferred actions, and successful recoveries — is committed to an immutable cryptographic chain:
 
-- **Cryptographic Audit Ledger**: Every recovery action is chained using `SHA-256` hashing (linking `prev_hash` to `current_hash`). The UI actively verifies this chain to detect any manual database tampering.
-- **TRAI Quiet Hours Check**: Blocks SMS/WhatsApp dispatches between 9:00 PM and 9:00 AM IST to strictly comply with Indian telecommunication anti-harassment laws.
-- **RBI 24-Hour Mandate Notice**: Aborts automated recovery attempts for recurring debits if a pre-debit notification was not successfully sent 24 hours prior.
-- **₹15,000 High-Value Approval Gate**: Immediately pauses completely autonomous actions for high-value transactions (>₹15k), escalating them to a human operations manager.
-- **2-Touch Harassment Cap**: Automatically limits the total number of automated outreaches to a single customer, preventing spam.
+```
+Block N hash = SHA256(Block N-1 hash | timestamp | event_id | cohort | action | payload)
+```
+
+- **Tamper Detection**: Altering any historical block breaks the hash chain. Resilix detects this instantly.
+- **Chain Verify**: One-click integrity check across the entire ledger.
+- **Safe Rollback**: When tampering is detected, the system identifies and excises the broken block, restoring chain integrity.
+- **Live Demo**: The "Simulate Hack" button in the dashboard mutates a historical payload and demonstrates live tamper detection — turning the affected block red and triggering quarantine mode.
+
+This makes Resilix fully auditable for RBI, NPCI, or any FinTech compliance review.
 
 ---
 
-## 🚀 Setup & Local Execution
+## Tech Stack
 
-### 1. Environment Setup
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python 3.11 · FastAPI · Pydantic v2 |
+| AI | Gemini AI (contextual Hinglish copy generation) |
+| Payments | Razorpay SDK (Payment Links · Subscriptions · Webhooks) |
+| Resilience | Tenacity (exponential backoff circuit breaker) |
+| Database | SQLite (cryptographic audit ledger) |
+| Frontend | HTML · TailwindCSS · Chart.js · Vanilla JS |
+| Auth | HMAC-SHA256 Razorpay webhook signature verification |
+
+---
+
+## How to Run Locally
+
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/PulseRecover-Pro.git
+# 1. Clone and enter the project
+git clone <repo-url>
 cd PulseRecover-Pro
 
-# Create virtual environment and install dependencies
+# 2. Create and activate virtual environment
 python -m venv venv
-.\venv\Scripts\activate  # On Windows
+.\venv\Scripts\activate        # Windows
+source venv/bin/activate       # macOS/Linux
+
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Configure environment (Optional - fallback keys built-in)
+cp .env.example .env
+# Edit .env with your Razorpay and Gemini API keys
+
+# 5. Start the server
+uvicorn app.main:app --reload --port 8000
+
+# 6. Open the dashboard
+# Navigate to: http://127.0.0.1:8000/dashboard
 ```
 
-### 2. Configure Variables
-Rename `.env.example` to `.env` and add your Razorpay keys:
+---
+
+## Environment Variables
+
+Create a `.env` file in the project root with the following keys:
+
 ```env
-RAZORPAY_KEY_ID=rzp_test_YOUR_KEY
-RAZORPAY_KEY_SECRET=YOUR_SECRET
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=your_secret_here
 RAZORPAY_WEBHOOK_SECRET=your_webhook_secret
+GEMINI_API_KEY=your_gemini_key
+APP_ENV=development
+DB_PATH=pulse_ledger.db
 ```
 
-### 3. Run the API & Dashboard
-```bash
-python -m uvicorn app.main:app --reload
-```
-Navigate to: **`http://127.0.0.1:8000/dashboard`** to view the enterprise observability UI.
+> **Note on Payment Link Behavior:**
+> - **With Valid API Keys in `.env`**: Clicking **"Link"** in the recovery table opens the authentic, live Razorpay checkout payment gateway page.
+> - **Without API Keys (Out-of-the-Box)**: The resilience circuit breaker automatically generates structured fallback demo links (`rzp.io/i/...`) so all pipeline workflows, step animations, and telemetry stream updates execute seamlessly without breaking.
 
 ---
 
-## 🧪 Testing & Live Simulation
+## Live Demo Walkthrough
 
-### Run the Pytest Suite
-We've included an extensive test suite validating the entire state machine and HMAC signatures.
-```bash
-pytest tests/ -v
-```
+Follow this sequence to see Resilix at its best:
 
-### Run the 50-Scenario Benchmark Streamer
-To see the system operate under pressure and watch the dashboard light up in real-time, keep the Uvicorn server running and in a second terminal execute:
-```bash
-python simulate_batch.py
-```
-This script injects 50 realistic failure events at `0.08s` intervals directly into the recovery pipeline.
+1. **Live Recovery Operations tab** — Watch the real-time telemetry stream and GMV Rupee Volume donut chart update live.
+
+2. **Simulation Sandbox** — Click preset **"Bank Outage (503 → Silent Retry)"** → Watch the 4-step animated pipeline stepper (Ingest → Guardrails → AI Triage → Ledger Commit).
+
+3. **Try "Daytime Cart Drop"** — Action becomes `DYNAMIC_LINK_SENT` → A real Razorpay payment link appears in the table → Click **"Link"** to open the Razorpay payment page.
+
+4. **Try "High-Value Drop (>₹15k Gate)"** — Guardrail fires → Action becomes `REQUIRES_HUMAN_APPROVAL` → Demonstrates bounded automation.
+
+5. **Cryptographic Audit Ledger tab** — Click **"Simulate Hack"** → Watch a block turn red, chain breaks → Click **"Verify Chain Integrity"** → Click **"Execute Safe Rollback"** to restore integrity.
+
+6. **Policy Guardians & Rules tab** — See TRAI, RBI, Harassment Cap, and High-Value guardrails with live status indicators.
 
 ---
 
-## 📚 Core API Documentation
+## Buildathon Track Alignment
 
-### `POST /webhooks/razorpay`
-The primary ingestion point for live Razorpay failures.
-- **Headers**: Requires valid `X-Razorpay-Signature`.
-- **Payload**: Standard Razorpay `payment.failed` or `invoice.overdue` JSON.
+**Track: AI Revenue Recovery** — *"Don't just identify the problem. Show measured money recovered across a batch, with compliant escalation, stopping rules, and an audit trail."*
 
-### `POST /api/simulate`
-An unprotected UI endpoint designed strictly for the interactive Sandbox Sandbox.
-- **Payload**:
-  ```json
-  {
-    "event_id": "sim_123",
-    "error_code": "503",
-    "error_description": "Bank Down",
-    "amount_inr": 1500.0,
-    "customer_phone": "9999999999"
-  }
-  ```
+| Track Requirement | Resilix Implementation |
+|-------------------|----------------------|
+| Detect revenue at risk | Real-time GMV-at-risk tracking across all 5 rails |
+| Determine right intervention | Sub-50ms deterministic triage engine → 4 cohort classification |
+| Execute bounded recovery workflow | Multi-rail state machine with hard guardrail enforcement |
+| Payment failure recovery | Silent retry with tenacity circuit breaker |
+| Checkout abandonment recovery | Dynamic Razorpay payment link + Hinglish WhatsApp copy |
+| Overdue receivables | B2B discount settlement + Promise-to-Pay tracker |
+| Mandate retry | UPI Autopay migration with RBI 24hr compliance window |
+| Compliant escalation | TRAI quiet hours + Harassment cap enforced in code |
+| Stopping rules | High-value gate (>₹15k) + harassment cap (≤2 touches/week) |
+| Audit trail | Immutable SHA-256 cryptographic ledger with tamper detection |
+| Measured money recovered | Live GMV recovered dashboard with recovery rate % |
 
-### `GET /api/metrics`
-Feeds the dashboard its telemetry. Returns real-time breakdown of GMV recovered, live hash block strings, and boolean verification of the cryptographic chain.
+---
+
+## License
+
+MIT License — Built for the Razorpay AI Buildathon 2026.
