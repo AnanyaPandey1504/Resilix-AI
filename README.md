@@ -151,6 +151,9 @@ uvicorn app.main:app --reload --port 8000
 
 # 6. Open the dashboard
 # Navigate to: http://127.0.0.1:8000/dashboard
+
+# 7. (Optional) Run CLI Batch Stream Simulation in a separate terminal
+python simulate_batch.py
 ```
 
 ---
@@ -189,6 +192,8 @@ Follow this sequence to see Resilix at its best:
 5. **Cryptographic Audit Ledger tab** — Click **"Simulate Hack"** → Watch a block turn red, chain breaks → Click **"Verify Chain Integrity"** → Click **"Execute Safe Rollback"** to restore integrity.
 
 6. **Policy Guardians & Rules tab** — See TRAI, RBI, Harassment Cap, and High-Value guardrails with live status indicators.
+
+7. **(Optional) Batch CLI Stream** — Run `python simulate_batch.py` in a separate terminal to watch 50 batch events stream live into the dashboard telemetry feed.
 
 ---
 
